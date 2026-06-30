@@ -87,6 +87,8 @@
       position: fixed;
       inset: 0;
       z-index: 1;
+      cursor: grab;
+      touch-action: none;
     }
 
     .site-ui {
@@ -424,7 +426,7 @@
 
     <section class="intro">
       <strong>An interactive archive</strong> of artworks, curatorial projects, writing and research.<br /><br />
-      Drag to rotate. Scroll to zoom. Click any floating object to open.
+      Drag to rotate. Scroll to zoom. Click any floating object to inspect; double-click to open.
     </section>
 
     <aside class="project-card" id="project-card" hidden>
@@ -447,8 +449,8 @@
       &gt; archive.log<br /><br />
       [INFO] connecting to tommilnes.com archive...<br />
       [INFO] rotary display active<br />
-      [INFO] drag / scroll / click enabled<br />
-      [INFO] replace placeholders in PROJECTS array
+      [INFO] capture controls v4 active<br />
+      [INFO] drag / wheel / click / double-click enabled
     </aside>
 
     <aside class="controls">
@@ -456,7 +458,8 @@
       Mouse drag = rotate archive<br />
       Wheel = zoom<br />
       Click object = project card<br />
-      Enter on object = follow link<br />
+      Double-click object = open link<br />
+      Enter = open selected / hovered link<br />
       R = reset view
     </aside>
 
@@ -634,6 +637,9 @@
     let zoomTarget = 15.5;
     let isDragging = false;
     let previousPointer = { x: 0, y: 0 };
+    let dragStartPointer = { x: 0, y: 0 };
+    let hasDragged = false;
+    let autoRotationOffset = 0;
     let hoveredObject = null;
     let selectedProject = null;
 
@@ -1120,93 +1126,212 @@
       POINTER / INTERACTION
       -------------------------------------------------------
     */
-    window.addEventListener("pointerdown", (event) => {
-      isDragging = true;
-      previousPointer.x = event.clientX;
-      previousPointer.y = event.clientY;
-    });
+    const controlsState = {
+      active: false,
+      moved: false,
+      startX: 0,
+      startY: 0,
+      lastX: 0,
+      lastY: 0,
+      lastInput: "ready"
+    };
 
-    window.addEventListener("pointerup", () => {
-      isDragging = false;
-    });
-
-    window.addEventListener("pointermove", (event) => {
+    function setPointerFromEvent(event) {
       pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
       pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    }
 
-      if (isDragging) {
-        const dx = event.clientX - previousPointer.x;
-        const dy = event.clientY - previousPointer.y;
+    let lastPointerEventAt = -Infinity;
 
-        targetRotationY += dx * 0.006;
-        targetRotationX += dy * 0.003;
-        targetRotationX = THREE.MathUtils.clamp(targetRotationX, -0.52, 0.32);
+    function isSyntheticMouseAfterPointer(event) {
+      return event.type.startsWith("mouse") && performance.now() - lastPointerEventAt < 700;
+    }
 
-        previousPointer.x = event.clientX;
-        previousPointer.y = event.clientY;
+    function rememberPointerEvent(event) {
+      if (event.type.startsWith("pointer")) lastPointerEventAt = performance.now();
+    }
+
+    function isUiControlEvent(event) {
+      const target = event.target instanceof Element ? event.target : null;
+      if (!target) return false;
+      return Boolean(target.closest("a, button, input, textarea, select, nav, .project-card"));
+    }
+
+    function writeControlStatus(action, extra = "") {
+      controlsState.lastInput = action;
+      terminal.innerHTML =
+        "&gt; archive.log<br><br>" +
+        "[INFO] capture controls v4 active<br>" +
+        `[INPUT] ${action}<br>` +
+        (extra ? `${extra}<br>` : "") +
+        `[ZOOM] ${camera.position.z.toFixed(2)}<br>` +
+        `[ROT] ${targetRotationY.toFixed(2)} / ${targetRotationX.toFixed(2)}`;
+    }
+
+    function restoreHoverVisual(object) {
+      if (!object) return;
+      const visual = object.userData.visual || object;
+      if (visual.material && visual.material.userData.originalOpacity !== undefined) {
+        visual.material.opacity = visual.material.userData.originalOpacity;
+        delete visual.material.userData.originalOpacity;
       }
-    });
+    }
 
-    window.addEventListener("wheel", (event) => {
-      zoomTarget += event.deltaY * 0.01;
-      zoomTarget = THREE.MathUtils.clamp(zoomTarget, 8.5, 24);
-    }, { passive: true });
+    function projectFromObject(object) {
+      let current = object;
+      while (current) {
+        if (current.userData.project) return current.userData.project;
+        current = current.parent;
+      }
+      return null;
+    }
 
-    window.addEventListener("click", (event) => {
-      // Avoid selecting 3D objects when clicking HTML UI.
-      if (event.target.closest(".site-ui") && !event.target.matches("#three-stage")) {
+    function pickObject(event) {
+      setPointerFromEvent(event);
+      raycaster.setFromCamera(pointer, camera);
+      const hits = raycaster.intersectObjects(clickable, true);
+      return hits.length ? hits[0].object : null;
+    }
+
+    function openProject(project) {
+      if (project?.url) window.location.href = project.url;
+    }
+
+    function resetView() {
+      targetRotationY = 0;
+      targetRotationX = -0.05;
+      currentRotationY = 0;
+      currentRotationX = -0.05;
+      zoomTarget = 15.5;
+      camera.position.z = 15.5;
+      autoRotationOffset = -clock.getElapsedTime() * 0.055;
+      writeControlStatus("RESET", "[ACTION] view reset");
+    }
+
+    function beginDrag(event) {
+      if (isSyntheticMouseAfterPointer(event) || isUiControlEvent(event)) return;
+      rememberPointerEvent(event);
+
+      controlsState.active = true;
+      controlsState.moved = false;
+      controlsState.startX = event.clientX;
+      controlsState.startY = event.clientY;
+      controlsState.lastX = event.clientX;
+      controlsState.lastY = event.clientY;
+      setPointerFromEvent(event);
+      document.body.style.cursor = "grabbing";
+      event.preventDefault();
+    }
+
+    function moveDrag(event) {
+      if (isSyntheticMouseAfterPointer(event)) return;
+      rememberPointerEvent(event);
+
+      setPointerFromEvent(event);
+      if (!controlsState.active) return;
+
+      const dx = event.clientX - controlsState.lastX;
+      const dy = event.clientY - controlsState.lastY;
+      const totalDx = event.clientX - controlsState.startX;
+      const totalDy = event.clientY - controlsState.startY;
+
+      controlsState.moved = controlsState.moved || Math.hypot(totalDx, totalDy) > 3;
+      controlsState.lastX = event.clientX;
+      controlsState.lastY = event.clientY;
+
+      targetRotationY += dx * 0.014;
+      targetRotationX = THREE.MathUtils.clamp(targetRotationX + dy * 0.008, -0.8, 0.55);
+      currentRotationY = targetRotationY;
+      currentRotationX = targetRotationX;
+      archiveGroup.rotation.y = currentRotationY + clock.getElapsedTime() * 0.055 + autoRotationOffset;
+      archiveGroup.rotation.x = currentRotationX;
+
+      writeControlStatus("DRAG", `[DELTA] ${dx.toFixed(0)}, ${dy.toFixed(0)}`);
+      event.preventDefault();
+    }
+
+    function endDrag(event) {
+      if (isSyntheticMouseAfterPointer(event)) return;
+      rememberPointerEvent(event);
+
+      controlsState.active = false;
+      document.body.style.cursor = hoveredObject ? "crosshair" : "default";
+    }
+
+    function zoomArchive(event) {
+      if (isUiControlEvent(event)) return;
+
+      zoomTarget = THREE.MathUtils.clamp(zoomTarget + event.deltaY * 0.026, 6.5, 28);
+      camera.position.z = zoomTarget;
+      writeControlStatus("WHEEL", `[DELTA] ${event.deltaY.toFixed(0)}`);
+      event.preventDefault();
+    }
+
+    function inspectProject(event) {
+      if (isUiControlEvent(event) || controlsState.moved) return;
+
+      const pickedObject = pickObject(event);
+      const project = pickedObject ? projectFromObject(pickedObject) : null;
+      if (!project) {
+        writeControlStatus("CLICK", "[HIT] none");
         return;
       }
 
-      raycaster.setFromCamera(pointer, camera);
-      const hits = raycaster.intersectObjects(clickable, true);
+      showProject(project);
+      writeControlStatus("CLICK", `[CARD] ${project.file}`);
+    }
 
-      if (hits.length > 0) {
-        const project = hits[0].object.userData.project;
-        if (project) showProject(project);
-      }
-    });
+    function openPickedProject(event) {
+      if (isUiControlEvent(event) || controlsState.moved) return;
+
+      const pickedObject = pickObject(event);
+      const project = pickedObject ? projectFromObject(pickedObject) : null;
+      if (project) openProject(project);
+    }
+
+    document.addEventListener("pointerdown", beginDrag, { capture: true, passive: false });
+    document.addEventListener("pointermove", moveDrag, { capture: true, passive: false });
+    document.addEventListener("pointerup", endDrag, true);
+    document.addEventListener("pointercancel", endDrag, true);
+    document.addEventListener("mousedown", beginDrag, { capture: true, passive: false });
+    document.addEventListener("mousemove", moveDrag, { capture: true, passive: false });
+    document.addEventListener("mouseup", endDrag, true);
+    document.addEventListener("wheel", zoomArchive, { capture: true, passive: false });
+    document.addEventListener("click", inspectProject, true);
+    document.addEventListener("dblclick", openPickedProject, true);
 
     window.addEventListener("keydown", (event) => {
-      if (event.key.toLowerCase() === "r") {
-        targetRotationY = 0;
-        targetRotationX = -0.05;
-        zoomTarget = 15.5;
+      if (event.key.toLowerCase() === "r") resetView();
+
+      if (event.key === "Enter") {
+        const hoveredProject = hoveredObject ? projectFromObject(hoveredObject) : null;
+        openProject(hoveredProject || selectedProject);
       }
 
-      if (event.key === "Enter" && hoveredObject) {
-        const project = hoveredObject.userData.project;
-        if (project) window.location.href = project.url;
-      }
-
-      if (event.key === "Escape") {
-        hideProject();
-      }
+      if (event.key === "Escape") hideProject();
     });
 
     function updateHover() {
+      if (controlsState.active) return;
+
       raycaster.setFromCamera(pointer, camera);
       const hits = raycaster.intersectObjects(clickable, true);
       const nextHover = hits.length ? hits[0].object : null;
 
       if (hoveredObject !== nextHover) {
-        if (hoveredObject) {
-          const visual = hoveredObject.userData.visual || hoveredObject;
-          if (visual.material) {
-            visual.material.opacity = visual.material.userData.originalOpacity || visual.material.opacity;
-          }
-        }
-
+        restoreHoverVisual(hoveredObject);
         hoveredObject = nextHover;
         document.body.style.cursor = hoveredObject ? "crosshair" : "default";
 
         if (hoveredObject) {
-          const project = hoveredObject.userData.project;
-          terminal.innerHTML =
-            "&gt; archive.log<br><br>" +
-            `[HOVER] ${project.file}<br>` +
-            `[TITLE] ${project.title}<br>` +
-            "[ACTION] click to inspect";
+          const project = projectFromObject(hoveredObject);
+          if (controlsState.lastInput === "ready") {
+            terminal.innerHTML =
+              "&gt; archive.log<br><br>" +
+              `[HOVER] ${project.file}<br>` +
+              `[TITLE] ${project.title}<br>` +
+              "[ACTION] click to inspect / double-click to open";
+          }
 
           const visual = hoveredObject.userData.visual || hoveredObject;
           if (visual.material && "opacity" in visual.material) {
@@ -1216,6 +1341,31 @@
         }
       }
     }
+
+    window.__archiveControls = {
+      getState: () => ({
+        targetRotationY,
+        targetRotationX,
+        currentRotationY,
+        currentRotationX,
+        zoomTarget,
+        cameraZ: camera.position.z,
+        active: controlsState.active,
+        moved: controlsState.moved,
+        clickable: clickable.length
+      }),
+      getProjectScreens: () => projectHolders.map((holder) => {
+        const position = holder.position.clone().applyMatrix4(archiveGroup.matrixWorld).project(camera);
+        return {
+          id: holder.userData.project.id,
+          title: holder.userData.project.title,
+          x: (position.x + 1) * window.innerWidth / 2,
+          y: (-position.y + 1) * window.innerHeight / 2,
+          z: position.z
+        };
+      }),
+      resetView
+    };
 
     /*
       -------------------------------------------------------
@@ -1239,7 +1389,7 @@
       currentRotationY = THREE.MathUtils.lerp(currentRotationY, targetRotationY, 0.06);
       currentRotationX = THREE.MathUtils.lerp(currentRotationX, targetRotationX, 0.06);
 
-      archiveGroup.rotation.y = currentRotationY + elapsed * 0.055;
+      archiveGroup.rotation.y = currentRotationY + elapsed * 0.055 + autoRotationOffset;
       archiveGroup.rotation.x = currentRotationX;
 
       camera.position.z = THREE.MathUtils.lerp(camera.position.z, zoomTarget, 0.08);
