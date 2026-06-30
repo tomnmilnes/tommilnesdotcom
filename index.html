@@ -59,8 +59,8 @@
       background:
         repeating-linear-gradient(
           to bottom,
-          rgba(255,255,255,0.04) 0px,
-          rgba(255,255,255,0.04) 1px,
+          rgba(0, 0, 0, 0.04) 0px,
+          rgba(0, 0, 0, 0.04) 1px,
           rgba(0,0,0,0.055) 2px,
           transparent 4px
         );
@@ -75,7 +75,7 @@
       pointer-events: none;
       background:
         radial-gradient(circle at center, transparent 52%, rgba(0,0,0,0.15)),
-        linear-gradient(90deg, rgba(255,0,255,0.025), transparent 14%, transparent 86%, rgba(0,255,255,0.035));
+        linear-gradient(90deg, rgba(4, 0, 4, 0.025), transparent 14%, transparent 86%, rgba(0, 0, 0, 0.035));
       z-index: 51;
     }
 
@@ -95,7 +95,7 @@
       position: fixed;
       inset: 0;
       z-index: 10;
-      pointer-events: none;
+      pointer-events: auto;
       display: grid;
       grid-template-rows: auto 1fr auto;
       padding: 22px 24px 16px;
@@ -139,7 +139,7 @@
 
     .menu {
       position: absolute;
-      top: 118px;
+      top: 32px;
       left: 32px;
       width: 205px;
       padding: 12px;
@@ -150,7 +150,7 @@
     }
 
     .menu-title {
-      font-size: 1.25rem;
+      font-size: 1.0rem;
       color: var(--blue);
       margin-bottom: 8px;
       border-bottom: 1px dotted var(--blue);
@@ -217,7 +217,7 @@
     .project-card[hidden] {
       opacity: 0;
       pointer-events: none;
-      transform: translateX(12px);
+      transform: translateX(1px);
       display: block;
     }
 
@@ -359,9 +359,9 @@
 
       .menu {
         position: absolute;
-        top: auto;
+        top: 0px;
         left: 16px;
-        bottom: 72px;
+        bottom: 74%;
         width: 210px;
       }
 
@@ -392,12 +392,12 @@
 </head>
 
 <body>
-  <div class="loading" id="loading">Loading volumetric archive...</div>
+  <div class="loading" id="loading">TOMMILNES.COM is now loading...</div>
 
   <canvas id="three-stage" aria-label="Three.js interactive project archive"></canvas>
 
   <div class="site-ui">
-    <header>
+    <!--<header>
       <div class="brand">TOMMILNES.COM</div>
       <div class="descriptor">
         Artist<br />
@@ -409,10 +409,10 @@
         Three.js rotary archive<br />
         WebGL / CRT / desktop interface
       </div>
-    </header>
+    </header> -->
 
     <nav class="menu" id="menu" aria-label="Main navigation">
-      <div class="menu-title" id="menu-toggle">☰ MENU</div>
+      <div class="menu-title" id="menu-toggle">☰ Tom Milnes</div>
       <div class="menu-links">
         <a href="./work/index.html">Work</a>
         <a href="./writing/index.html">Writing</a>
@@ -420,14 +420,14 @@
         <a href="./research/index.html">Research</a>
         <a href="./archive/index.html">Archive Index</a>
         <a href="./about/index.html">About / CV</a>
-        <a href="mailto:hello@example.com">Contact</a>
+        <a href="mailto:tomnmilnes@gmail.com">Contact</a>
       </div>
     </nav>
 
-    <section class="intro">
+   <!--<section class="intro">
       <strong>An interactive archive</strong> of artworks, curatorial projects, writing and research.<br /><br />
       Drag to rotate. Scroll to zoom. Click any floating object to inspect; double-click to open.
-    </section>
+    </section>-->
 
     <aside class="project-card" id="project-card" hidden>
       <div class="titlebar">
@@ -463,12 +463,12 @@
       R = reset view
     </aside>
 
-    <footer>
+    <!--<footer>
       <span>Tom Milnes © 2026</span>
       <span>WebGL / Three.js / GLSL</span>
       <span>Sound: off</span>
       <span class="low-bandwidth">[ Low bandwidth mode ]</span>
-    </footer>
+    </footer>-->
   </div>
 
   <script type="module">
@@ -519,7 +519,7 @@
         description: "Volumetric capture, photogrammetry, networked scanning and the circulation of 3D scans across platforms and infrastructures.",
         url: "./work/scanitas/index.html",
         image: "./assets/REPLACE_scanitas.jpg",
-        shape: "splat",
+        shape: "mokka",
         color: 0x0b6f8f
       },
       {
@@ -535,27 +535,27 @@
         color: 0x009b45
       },
       {
-        id: "splaxtraction",
-        title: "Splaxtraction",
-        file: "splaxtraction.gspl",
-        type: "Writing / Research",
-        date: "2026",
+        id: "Rolodex Propaganda",
+        title: "Rolodex Propaganda",
+        file: "rolodex_propaganda.gspl",
+        type: "Exhibition / Installation",
+        date: "2024",
         description: "Gaussian Splats as extractive vision: ecological costs, computational infrastructures and the politics of volumetric seeing.",
-        url: "./writing/splaxtraction/index.html",
-        image: "./assets/REPLACE_splaxtraction.jpg",
-        shape: "splat",
+        url: "./writing/rolodex-propaganda/index.html",
+        image: "./assets/REPLACE_rolodex_propaganda.jpg",
+        shape: "rolodex",
         color: 0xff33aa
       },
       {
-        id: "preserving-machine",
-        title: "The Preserving Machine",
+        id: "Scanitas-LAB",
+        title: "Scanitas-LAB",
         file: "the_preserving_machine.exe",
-        type: "Article / Media theory",
-        date: "2026",
+        type: "Exhibition",
+        date: "2025",
         description: "Probabilistic imaging, synthetic reconstruction and the refracted infrastructures of the computational image.",
         url: "./writing/the-preserving-machine/index.html",
         image: "./assets/REPLACE_preserving_machine.jpg",
-        shape: "window",
+        shape: "peony-bottle",
         color: 0x0614d8
       },
       {
@@ -567,31 +567,31 @@
         description: "A data-transfer exhibition structure exploring AI, translation, mediation, glitch and distributed online exhibition formats.",
         url: "./curating/time-space-transmat/index.html",
         image: "./assets/REPLACE_transmat.jpg",
-        shape: "plane",
+        shape: "saturn-text",
         color: 0x6666ff
       },
       {
-        id: "artist-led-platforms",
-        title: "Artist-Led Platforms",
-        file: "artist_led_platforms.pdf",
+        id: "Ashnihilation",
+        title: "Ashnihilation",
+        file: "ashnihilation.pdf",
         type: "Research / Writing",
-        date: "2026",
-        description: "Artist-led online platforms, para-institutional curatorial infrastructures and post-digital exhibition cultures.",
-        url: "./writing/artist-led-platforms/index.html",
-        image: "./assets/REPLACE_artist_led_platforms.jpg",
-        shape: "wire",
+        date: "2022",
+        description: "Augmented reality sustainibility project in conjunction with Green Minds utilizing Microsoft Hololens.",
+        url: "./writing/ashnihilation/index.html",
+        image: "./assets/REPLACE_ashnihilation.jpg",
+        shape: "lighthouse-tree",
         color: 0x222222
       },
       {
-        id: "netscapers",
-        title: "Netscapers",
-        file: "netscapers.map",
-        type: "Research project",
+        id: "Deep Relaxation",
+        title: "Deep Relaxation",
+        file: "deep_relaxation.pdf",
+        type: "Research / Writing",
         date: "2026",
-        description: "Creative web access, open XR futures and public agency within changing networked environments.",
-        url: "./research/netscapers/index.html",
-        image: "./assets/REPLACE_netscapers.jpg",
-        shape: "plane",
+        description: "Kinetic sound installation with Walkmans and tape loops.",
+        url: "./research/deep-relaxation/index.html",
+        image: "./assets/REPLACE_deep_relaxation.jpg",
+        shape: "walkman",
         color: 0x00a6ff
       }
     ];
@@ -610,6 +610,9 @@
 
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.08;
 
     const scene = new THREE.Scene();
     scene.fog = new THREE.FogExp2(0xf4f5ef, 0.018);
@@ -650,6 +653,9 @@
     */
     const ambientLight = new THREE.AmbientLight(0xffffff, 1.9);
     scene.add(ambientLight);
+
+    const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0xb6c7bd, 1.15);
+    scene.add(hemisphereLight);
 
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1.6);
     directionalLight.position.set(4, 8, 6);
@@ -811,7 +817,7 @@
 
       holder.lookAt(0, holder.position.y, 0);
 
-      const label = makeTextSprite(project.title.toUpperCase(), { fontSize: 34, scale: 0.01 });
+      const label = makeTextSprite(project.title.toUpperCase(), { fontSize: 24, scale: 0.01 });
       label.position.set(0, 1.55, 0.05);
       holder.add(label);
 
@@ -819,6 +825,18 @@
 
       if (project.shape === "splat") {
         object = createSplatObject(project);
+      } else if (project.shape === "mokka") {
+        object = createMokkaPotObject(project);
+      } else if (project.shape === "rolodex") {
+        object = createRolodexObject(project);
+      } else if (project.shape === "peony-bottle") {
+        object = createPeonyBottleObject(project);
+      } else if (project.shape === "saturn-text") {
+        object = createSaturnTextObject(project);
+      } else if (project.shape === "lighthouse-tree") {
+        object = createLighthouseTreeObject(project);
+      } else if (project.shape === "walkman") {
+        object = createWalkmanObject(project);
       } else if (project.shape === "window") {
         object = createWindowObject(project);
       } else if (project.shape === "wire") {
@@ -971,6 +989,455 @@
       group.userData.project = project;
       clickable.push(invisibleHitArea);
       return group;
+    }
+
+    function makeCanvasTexture(width, height, draw) {
+      const c = document.createElement("canvas");
+      c.width = width;
+      c.height = height;
+      const ctx = c.getContext("2d");
+      draw(ctx, width, height);
+      const texture = new THREE.CanvasTexture(c);
+      texture.colorSpace = THREE.SRGBColorSpace;
+      texture.anisotropy = 4;
+      return texture;
+    }
+
+    function makeStripedTexture(colors, direction = "vertical", repeat = 8) {
+      return makeCanvasTexture(256, 256, (ctx, w, h) => {
+        const steps = repeat * colors.length;
+        for (let i = 0; i < steps; i++) {
+          ctx.fillStyle = colors[i % colors.length];
+          if (direction === "horizontal") {
+            ctx.fillRect(0, (i / steps) * h, w, h / steps + 1);
+          } else {
+            ctx.fillRect((i / steps) * w, 0, w / steps + 1, h);
+          }
+        }
+      });
+    }
+
+    function makeLabelTexture(lines, options = {}) {
+      return makeCanvasTexture(512, 256, (ctx, w, h) => {
+        ctx.fillStyle = options.background || "#f4f5ef";
+        ctx.fillRect(0, 0, w, h);
+        ctx.strokeStyle = options.border || "#0614d8";
+        ctx.lineWidth = 8;
+        ctx.strokeRect(16, 16, w - 32, h - 32);
+        ctx.fillStyle = options.color || "#0614d8";
+        ctx.font = "bold 40px Courier New";
+        ctx.textBaseline = "middle";
+        lines.forEach((line, index) => ctx.fillText(line, 42, 78 + index * 52));
+        if (options.rule) {
+          ctx.strokeStyle = options.rule;
+          ctx.lineWidth = 5;
+          ctx.beginPath();
+          ctx.moveTo(42, h - 52);
+          ctx.lineTo(w - 42, h - 52);
+          ctx.stroke();
+        }
+      });
+    }
+
+    function createBeveledBox(width, height, depth, radius, material) {
+      const x = width / 2 - radius;
+      const y = height / 2 - radius;
+      const shape = new THREE.Shape();
+      shape.moveTo(-x, -height / 2);
+      shape.lineTo(x, -height / 2);
+      shape.quadraticCurveTo(width / 2, -height / 2, width / 2, -y);
+      shape.lineTo(width / 2, y);
+      shape.quadraticCurveTo(width / 2, height / 2, x, height / 2);
+      shape.lineTo(-x, height / 2);
+      shape.quadraticCurveTo(-width / 2, height / 2, -width / 2, y);
+      shape.lineTo(-width / 2, -y);
+      shape.quadraticCurveTo(-width / 2, -height / 2, -x, -height / 2);
+      const geometry = new THREE.ExtrudeGeometry(shape, {
+        depth,
+        bevelEnabled: true,
+        bevelThickness: Math.min(radius * 0.42, depth * 0.32),
+        bevelSize: radius * 0.45,
+        bevelSegments: 5,
+        steps: 1
+      });
+      geometry.center();
+      return new THREE.Mesh(geometry, material);
+    }
+
+    function createMokkaPotObject(project) {
+      const group = new THREE.Group();
+      const metal = new THREE.MeshStandardMaterial({
+        color: 0xd3d2c8,
+        roughness: 0.28,
+        metalness: 0.9,
+        envMapIntensity: 1.1
+      });
+      const dark = new THREE.MeshStandardMaterial({
+        color: 0x151515,
+        roughness: 0.5,
+        metalness: 0.35
+      });
+      const warm = new THREE.MeshStandardMaterial({
+        color: 0xf1ead8,
+        roughness: 0.35,
+        metalness: 0.55
+      });
+
+      const lowerProfile = [
+        [0.42, -0.9], [0.74, -0.78], [0.88, -0.42], [0.72, -0.08], [0.48, 0.02]
+      ].map(([x, y]) => new THREE.Vector2(x, y));
+      const upperProfile = [
+        [0.36, 0.03], [0.72, 0.18], [0.68, 0.72], [0.52, 0.98], [0.28, 1.05]
+      ].map(([x, y]) => new THREE.Vector2(x, y));
+      const lower = new THREE.Mesh(new THREE.LatheGeometry(lowerProfile, 48), metal);
+      const upper = new THREE.Mesh(new THREE.LatheGeometry(upperProfile, 48), metal);
+
+      const waist = new THREE.Mesh(new THREE.TorusGeometry(0.59, 0.055, 14, 48), dark);
+      waist.position.y = 0.04;
+      waist.rotation.x = Math.PI / 2;
+
+      const lid = new THREE.Mesh(new THREE.CylinderGeometry(0.54, 0.62, 0.12, 48), warm);
+      lid.position.y = 1.1;
+      const lidLip = new THREE.Mesh(new THREE.TorusGeometry(0.52, 0.035, 12, 48), metal);
+      lidLip.position.y = 1.17;
+      lidLip.rotation.x = Math.PI / 2;
+      const knob = new THREE.Mesh(new THREE.SphereGeometry(0.13, 24, 16), dark);
+      knob.position.y = 1.28;
+
+      const spout = new THREE.Mesh(new THREE.ConeGeometry(0.21, 0.92, 24), metal);
+      spout.position.set(0.82, 0.62, 0);
+      spout.rotation.z = -Math.PI / 2.55;
+      spout.scale.set(0.55, 1, 0.72);
+      const spoutLip = new THREE.Mesh(new THREE.TorusGeometry(0.12, 0.018, 8, 24), warm);
+      spoutLip.position.set(1.17, 0.82, 0);
+      spoutLip.rotation.y = Math.PI / 2;
+      spoutLip.rotation.z = 0.45;
+
+      const handle = new THREE.Mesh(new THREE.TorusGeometry(0.56, 0.055, 16, 48, Math.PI * 1.35), dark);
+      handle.position.set(-0.75, 0.46, 0);
+      handle.rotation.z = Math.PI / 2;
+      const handleMountA = new THREE.Mesh(new THREE.SphereGeometry(0.08, 16, 10), dark);
+      handleMountA.position.set(-0.54, 0.76, 0);
+      const handleMountB = handleMountA.clone();
+      handleMountB.position.set(-0.55, 0.16, 0);
+
+      for (let i = 0; i < 8; i++) {
+        const rib = new THREE.Mesh(new THREE.BoxGeometry(0.025, 0.72, 0.018), dark);
+        const angle = (i / 8) * Math.PI * 2;
+        rib.position.set(Math.cos(angle) * 0.74, -0.46, Math.sin(angle) * 0.74);
+        rib.rotation.y = -angle;
+        rib.material = dark;
+        group.add(rib);
+      }
+
+      group.add(lower, upper, waist, lid, lidLip, knob, spout, spoutLip, handle, handleMountA, handleMountB);
+      group.userData.project = project;
+      addHitSphere(group, project, 1.42, 0.2);
+      return group;
+    }
+
+    function createRolodexObject(project) {
+      const group = new THREE.Group();
+      const baseMaterial = new THREE.MeshStandardMaterial({ color: 0x25252a, roughness: 0.55, metalness: 0.25 });
+      const metalMaterial = new THREE.MeshStandardMaterial({ color: 0xa8abb0, roughness: 0.25, metalness: 0.85 });
+      const cardTexture = makeLabelTexture(["ROLODEX", "PROPAGANDA"], { background: "#f3ead1", color: "#0614d8", border: "#d22b2b", rule: "#009b45" });
+      const cardMaterial = new THREE.MeshStandardMaterial({ map: cardTexture, roughness: 0.82, metalness: 0.02, side: THREE.DoubleSide });
+      const tabMaterial = new THREE.MeshStandardMaterial({ color: project.color, roughness: 0.5, metalness: 0.12 });
+
+      const base = createBeveledBox(2.7, 0.32, 1.52, 0.13, baseMaterial);
+      base.position.y = -0.78;
+      const frontRail = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 2.35, 24), metalMaterial);
+      frontRail.rotation.z = Math.PI / 2;
+      frontRail.position.set(0, -0.42, 0.72);
+      const backRail = frontRail.clone();
+      backRail.position.z = -0.72;
+
+      const axle = new THREE.Mesh(new THREE.CylinderGeometry(0.095, 0.095, 2.42, 32), metalMaterial);
+      axle.rotation.z = Math.PI / 2;
+      axle.position.y = -0.08;
+
+      for (let i = 0; i < 28; i++) {
+        const card = createBeveledBox(1.42, 0.84, 0.018, 0.035, cardMaterial);
+        const angle = (i / 27) * Math.PI * 1.55 - Math.PI * 0.78;
+        card.position.set(Math.sin(angle) * 0.52, Math.cos(angle) * 0.52 - 0.08, (i - 13.5) * 0.036);
+        card.rotation.x = angle;
+        card.userData.baseRotationX = angle;
+        const tab = createBeveledBox(0.28, 0.16, 0.024, 0.025, tabMaterial);
+        tab.position.set(0.46 - (i % 4) * 0.18, 0.42, 0.025);
+        card.add(tab);
+        group.add(card);
+      }
+
+      const title = makeTextSprite("CARD INDEX", { fontSize: 24, scale: 0.0075, background: "#0614d8" });
+      title.position.set(0, 0.78, 0.08);
+
+      group.add(base, frontRail, backRail, axle, title);
+      group.userData.project = project;
+      group.userData.animate = (elapsed) => {
+        group.rotation.z = Math.sin(elapsed * 1.15) * 0.07;
+        group.children.forEach((child, index) => {
+          if (child.userData.baseRotationX !== undefined) {
+            child.rotation.x = child.userData.baseRotationX + Math.sin(elapsed * 2.1 + index * 0.35) * 0.045;
+          }
+        });
+      };
+      addHitSphere(group, project, 1.55, -0.05);
+      return group;
+    }
+
+    function createPeonyBottleObject(project) {
+      const group = new THREE.Group();
+      const glass = new THREE.MeshPhysicalMaterial({
+        color: 0xc8efff,
+        transparent: true,
+        opacity: 0.42,
+        roughness: 0.02,
+        metalness: 0,
+        transmission: 0.55,
+        thickness: 0.65,
+        ior: 1.45,
+        clearcoat: 1,
+        clearcoatRoughness: 0.03
+      });
+      const water = new THREE.MeshPhysicalMaterial({ color: 0x9cd8f2, transparent: true, opacity: 0.36, roughness: 0.08, transmission: 0.25 });
+      const stemMaterial = new THREE.MeshStandardMaterial({ color: 0x1f7a3f, roughness: 0.62 });
+      const leafMaterial = new THREE.MeshStandardMaterial({ color: 0x2e8c45, roughness: 0.72, side: THREE.DoubleSide });
+      const petalMaterials = [0xff9dc2, 0xff78ad, 0xf7bfd2].map(color => new THREE.MeshStandardMaterial({ color, roughness: 0.9, side: THREE.DoubleSide }));
+
+      const bottleProfile = [
+        [0.18, -0.88], [0.54, -0.82], [0.6, -0.55], [0.52, 0.18], [0.24, 0.42], [0.18, 1.12], [0.24, 1.22]
+      ].map(([x, y]) => new THREE.Vector2(x, y));
+      const bottle = new THREE.Mesh(new THREE.LatheGeometry(bottleProfile, 48), glass);
+      const waterMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.56, 0.48, 48), water);
+      waterMesh.position.y = -0.5;
+      const rim = new THREE.Mesh(new THREE.TorusGeometry(0.235, 0.035, 14, 48), glass);
+      rim.position.y = 1.22;
+      rim.rotation.x = Math.PI / 2;
+
+      const curve = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(0, -0.68, 0),
+        new THREE.Vector3(-0.08, 0.05, 0.02),
+        new THREE.Vector3(0.04, 0.75, -0.02),
+        new THREE.Vector3(0.02, 1.34, 0)
+      ]);
+      const stem = new THREE.Mesh(new THREE.TubeGeometry(curve, 32, 0.035, 10), stemMaterial);
+
+      for (let i = 0; i < 4; i++) {
+        const leaf = new THREE.Mesh(new THREE.SphereGeometry(0.18, 18, 10), leafMaterial);
+        leaf.position.set(i % 2 ? 0.18 : -0.18, 0.15 + i * 0.2, i % 2 ? 0.05 : -0.04);
+        leaf.scale.set(1.6, 0.28, 0.75);
+        leaf.rotation.set(0.2, i * 1.4, i % 2 ? -0.55 : 0.55);
+        group.add(leaf);
+      }
+
+      for (let layer = 0; layer < 3; layer++) {
+        const count = 9 + layer * 3;
+        for (let i = 0; i < count; i++) {
+          const petal = new THREE.Mesh(new THREE.SphereGeometry(0.2 + layer * 0.025, 24, 12), petalMaterials[layer]);
+          const angle = (i / count) * Math.PI * 2 + layer * 0.28;
+          const radius = 0.16 + layer * 0.13;
+          petal.position.set(Math.cos(angle) * radius, 1.42 + Math.sin(i * 1.7) * 0.035, Math.sin(angle) * radius * 0.72);
+          petal.scale.set(1.35, 0.24, 0.82);
+          petal.rotation.set(0.46 + layer * 0.18, angle, 0.15);
+          group.add(petal);
+        }
+      }
+
+      const center = new THREE.Mesh(new THREE.SphereGeometry(0.15, 24, 16), new THREE.MeshStandardMaterial({ color: 0xffd85a, roughness: 0.65 }));
+      center.position.y = 1.43;
+
+      group.add(bottle, waterMesh, rim, stem, center);
+      group.userData.project = project;
+      addHitSphere(group, project, 1.34, 0.34);
+      return group;
+    }
+
+    function createSaturnTextObject(project) {
+      const group = new THREE.Group();
+      const planetTexture = makeCanvasTexture(512, 256, (ctx, w, h) => {
+        const gradient = ctx.createLinearGradient(0, 0, 0, h);
+        gradient.addColorStop(0, "#f0d6a2");
+        gradient.addColorStop(0.24, "#8b80ff");
+        gradient.addColorStop(0.42, "#f4f5ef");
+        gradient.addColorStop(0.58, "#6a62d8");
+        gradient.addColorStop(1, "#d2b37b");
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = "rgba(6,20,216,0.22)";
+        for (let i = 0; i < 18; i++) ctx.fillRect(0, i * 15 + Math.sin(i) * 5, w, 4);
+      });
+      const planet = new THREE.Mesh(
+        new THREE.SphereGeometry(0.74, 64, 32),
+        new THREE.MeshStandardMaterial({ map: planetTexture, roughness: 0.48, metalness: 0.05 })
+      );
+      planet.scale.y = 0.84;
+
+      const ringMaterial = new THREE.MeshStandardMaterial({ color: 0xf2ead1, roughness: 0.36, metalness: 0.22, transparent: true, opacity: 0.82, side: THREE.DoubleSide });
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(1.2, 0.055, 16, 160), ringMaterial);
+      ring.rotation.x = Math.PI / 2.75;
+      const ring2 = new THREE.Mesh(new THREE.TorusGeometry(1.52, 0.026, 12, 160), new THREE.MeshBasicMaterial({ color: 0x0614d8, transparent: true, opacity: 0.68 }));
+      ring2.rotation.x = Math.PI / 2.75;
+      const ring3 = new THREE.Mesh(new THREE.TorusGeometry(0.96, 0.018, 10, 128), new THREE.MeshBasicMaterial({ color: 0xfff0a0, transparent: true, opacity: 0.72 }));
+      ring3.rotation.x = Math.PI / 2.75;
+
+      const moon = new THREE.Mesh(new THREE.SphereGeometry(0.09, 18, 12), new THREE.MeshStandardMaterial({ color: 0xe9e5d6, roughness: 0.75 }));
+      const orbitText = makeTextSprite("TIME . SPACE . TRANSMAT", { fontSize: 24, scale: 0.008, background: "rgba(6,20,216,0.92)" });
+      orbitText.position.set(0, 1.25, 0);
+
+      group.add(planet, ring, ring2, ring3, moon, orbitText);
+      group.userData.project = project;
+      group.userData.animate = (elapsed) => {
+        planet.rotation.y = elapsed * 0.18;
+        ring.rotation.z = elapsed * 0.38;
+        ring2.rotation.z = -elapsed * 0.22;
+        ring3.rotation.z = elapsed * 0.5;
+        moon.position.set(Math.cos(elapsed * 1.45) * 1.72, Math.sin(elapsed * 1.1) * 0.35, Math.sin(elapsed * 1.45) * 1.72);
+        orbitText.position.x = Math.cos(elapsed * 1.05) * 1.32;
+        orbitText.position.z = Math.sin(elapsed * 1.05) * 1.32;
+        orbitText.lookAt(camera.position);
+      };
+      addHitSphere(group, project, 1.76, 0.08);
+      return group;
+    }
+
+    function createLighthouseTreeObject(project) {
+      const group = new THREE.Group();
+      const stripeTexture = makeStripedTexture(["#f7f5eb", "#d92d2d"], "horizontal", 4);
+      const bodyMaterial = new THREE.MeshStandardMaterial({ map: stripeTexture, roughness: 0.64, metalness: 0.02 });
+      const red = new THREE.MeshStandardMaterial({ color: 0xd92d2d, roughness: 0.55 });
+      const dark = new THREE.MeshStandardMaterial({ color: 0x121212, roughness: 0.42, metalness: 0.15 });
+      const glass = new THREE.MeshPhysicalMaterial({ color: 0xfff0a0, transparent: true, opacity: 0.55, transmission: 0.2, roughness: 0.05 });
+      const green = new THREE.MeshStandardMaterial({ color: 0x176d34, roughness: 0.82 });
+      const bark = new THREE.MeshStandardMaterial({ color: 0x6b543d, roughness: 0.9 });
+
+      const towerProfile = [[0.36, -0.8], [0.46, -0.7], [0.4, 0.65], [0.3, 0.92]].map(([x, y]) => new THREE.Vector2(x, y));
+      const tower = new THREE.Mesh(new THREE.LatheGeometry(towerProfile, 40), bodyMaterial);
+      const door = createBeveledBox(0.22, 0.42, 0.025, 0.035, dark);
+      door.position.set(0, -0.54, 0.405);
+      const windowA = createBeveledBox(0.16, 0.18, 0.025, 0.025, dark);
+      windowA.position.set(0, 0.08, 0.365);
+      const windowB = windowA.clone();
+      windowB.position.y = 0.42;
+
+      const gallery = new THREE.Mesh(new THREE.TorusGeometry(0.42, 0.025, 10, 48), dark);
+      gallery.position.y = 0.98;
+      gallery.rotation.x = Math.PI / 2;
+      for (let i = 0; i < 12; i++) {
+        const post = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.25, 8), dark);
+        const angle = (i / 12) * Math.PI * 2;
+        post.position.set(Math.cos(angle) * 0.42, 1.02, Math.sin(angle) * 0.42);
+        group.add(post);
+      }
+
+      const lantern = new THREE.Mesh(new THREE.CylinderGeometry(0.29, 0.31, 0.3, 32), glass);
+      lantern.position.y = 1.14;
+      const light = new THREE.PointLight(0xfff0a0, 0.55, 4);
+      light.position.y = 1.14;
+      const roof = new THREE.Mesh(new THREE.ConeGeometry(0.42, 0.34, 32), red);
+      roof.position.y = 1.46;
+
+      const trunkCurve = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(0, 1.52, 0),
+        new THREE.Vector3(0.03, 1.78, 0.02),
+        new THREE.Vector3(-0.04, 2.02, 0)
+      ]);
+      const trunk = new THREE.Mesh(new THREE.TubeGeometry(trunkCurve, 16, 0.045, 8), bark);
+      for (let i = 0; i < 9; i++) {
+        const branch = new THREE.Mesh(new THREE.ConeGeometry(0.26 - i * 0.012, 0.48, 12), green);
+        branch.position.y = 1.72 + i * 0.085;
+        branch.rotation.y = (i / 9) * Math.PI * 2;
+        branch.rotation.z = i % 2 ? 0.08 : -0.08;
+        group.add(branch);
+      }
+
+      group.add(tower, door, windowA, windowB, gallery, lantern, light, roof, trunk);
+      group.userData.project = project;
+      addHitSphere(group, project, 1.34, 0.45);
+      return group;
+    }
+
+    function createWalkmanObject(project) {
+      const group = new THREE.Group();
+      const bodyMaterial = new THREE.MeshStandardMaterial({ color: 0x2a86c7, roughness: 0.38, metalness: 0.2, clearcoat: 0.55, clearcoatRoughness: 0.18 });
+      const darkMaterial = new THREE.MeshStandardMaterial({ color: 0x101010, roughness: 0.5, metalness: 0.25 });
+      const rubberMaterial = new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 0.85 });
+      const clearMaterial = new THREE.MeshPhysicalMaterial({ color: 0xd8f2ff, transparent: true, opacity: 0.62, roughness: 0.04, transmission: 0.18, clearcoat: 1 });
+      const accentMaterial = new THREE.MeshStandardMaterial({ color: 0xff3355, roughness: 0.42, metalness: 0.18 });
+      const labelTexture = makeLabelTexture(["DEEP", "RELAX"], { background: "#f4f5ef", color: "#0614d8", border: "#ff3355" });
+
+      const body = createBeveledBox(2.18, 1.38, 0.36, 0.16, bodyMaterial);
+      const cassetteDoor = createBeveledBox(1.08, 0.62, 0.05, 0.07, clearMaterial);
+      cassetteDoor.position.set(0.12, 0.13, 0.22);
+      const label = new THREE.Mesh(new THREE.PlaneGeometry(0.62, 0.28), new THREE.MeshBasicMaterial({ map: labelTexture }));
+      label.position.set(0.15, -0.34, 0.24);
+
+      const reelA = new THREE.Mesh(new THREE.CylinderGeometry(0.19, 0.19, 0.065, 36), darkMaterial);
+      reelA.position.set(-0.31, 0.13, 0.285);
+      reelA.rotation.x = Math.PI / 2;
+      const reelB = reelA.clone();
+      reelB.position.x = 0.47;
+      [reelA, reelB].forEach((reel) => {
+        for (let i = 0; i < 6; i++) {
+          const spoke = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.025, 0.016), new THREE.MeshBasicMaterial({ color: 0xf4f5ef }));
+          spoke.rotation.z = (i / 6) * Math.PI;
+          spoke.position.z = 0.04;
+          reel.add(spoke);
+        }
+      });
+      const tapeLine = new THREE.Mesh(new THREE.TorusGeometry(0.52, 0.014, 8, 64, Math.PI), rubberMaterial);
+      tapeLine.position.set(0.08, 0.14, 0.29);
+      tapeLine.rotation.z = Math.PI;
+
+      const speaker = createBeveledBox(0.5, 0.76, 0.035, 0.04, darkMaterial);
+      speaker.position.set(-0.72, -0.14, 0.235);
+      for (let i = 0; i < 6; i++) {
+        const slit = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.018, 0.016), new THREE.MeshBasicMaterial({ color: 0x666666 }));
+        slit.position.set(-0.72, -0.41 + i * 0.1, 0.26);
+        group.add(slit);
+      }
+
+      for (let i = 0; i < 4; i++) {
+        const button = createBeveledBox(0.22, 0.12, 0.1, 0.025, i === 0 ? accentMaterial : darkMaterial);
+        button.position.set(-0.55 + i * 0.32, 0.78, 0.04);
+        group.add(button);
+      }
+      for (const [x, y] of [[-0.95, 0.52], [0.95, 0.52], [-0.95, -0.55], [0.95, -0.55]]) {
+        const screw = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.018, 20), darkMaterial);
+        screw.position.set(x, y, 0.235);
+        screw.rotation.x = Math.PI / 2;
+        group.add(screw);
+      }
+
+      const headphoneJack = new THREE.Mesh(new THREE.TorusGeometry(0.11, 0.025, 10, 24), darkMaterial);
+      headphoneJack.position.set(0.82, 0.73, 0.12);
+      const cable = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
+        new THREE.Vector3(0.82, 0.74, 0.14),
+        new THREE.Vector3(1.08, 1.05, 0.05),
+        new THREE.Vector3(0.78, 1.28, -0.08)
+      ]), 24, 0.018, 8), rubberMaterial);
+
+      group.add(body, cassetteDoor, label, reelA, reelB, tapeLine, speaker, headphoneJack, cable);
+      group.userData.project = project;
+      group.userData.animate = (elapsed) => {
+        reelA.rotation.z = elapsed * 2.2;
+        reelB.rotation.z = -elapsed * 2.2;
+        tapeLine.rotation.y = Math.sin(elapsed * 2.2) * 0.08;
+      };
+      addHitSphere(group, project, 1.42, 0.08);
+      return group;
+    }
+
+    function addHitSphere(group, project, radius, y = 0) {
+      const hit = new THREE.Mesh(
+        new THREE.SphereGeometry(radius, 16, 16),
+        new THREE.MeshBasicMaterial({ visible: false })
+      );
+      hit.position.y = y;
+      hit.userData.project = project;
+      hit.userData.visual = group;
+      group.add(hit);
+      clickable.push(hit);
+      return hit;
     }
 
     function createPalmObject(project) {
@@ -1401,6 +1868,9 @@
       projectHolders.forEach((holder, index) => {
         holder.position.y = holder.userData.baseY + Math.sin(elapsed * 0.9 + index) * 0.18;
         holder.rotation.y += 0.003;
+        holder.children.forEach((child) => {
+          if (child.userData.animate) child.userData.animate(elapsed);
+        });
       });
 
       updateHover();
