@@ -1,14 +1,1266 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>tommilnes.com test</title>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    <script src="index.js"></script>tommilnes.com is under construction. Back online soon.
-    if urgent, please contact Tom via tomnmilnes {at} gmail [dot] com or via Instagram @tommilnes
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>tommilnes.com — Three.js Volumetric Archive Prototype</title>
+
+  <!--
+    TOMMILNES.COM — THREE.JS HOMEPAGE PROTOTYPE
+    -------------------------------------------------------
+    This is a working single-page prototype for the interactive homepage.
+
+    Key things to edit:
+    1. Replace PROJECTS data in the <script type="module"> section.
+    2. Replace placeholder image URLs in PROJECTS with your own files.
+    3. Put your images in /assets and update the paths, e.g.
+       image: "./assets/scanitas.jpg"
+    4. Change project links from "#scanitas" to real branch pages, e.g.
+       url: "./work/scanitas/index.html"
+
+    The branch/project pages can stay simple HTML/CMS pages.
+    This homepage can later be moved into Astro, Next.js, or WordPress.
+  -->
+
+  <style>
+    :root {
+      --blue: #0614d8;
+      --blue-soft: rgba(6, 20, 216, 0.14);
+      --green: #009b45;
+      --ink: #070707;
+      --paper: #f4f5ef;
+      --panel: rgba(246, 247, 242, 0.9);
+      --shadow: 6px 6px 0 rgba(0,0,0,0.18);
+      --mono: "Courier New", Courier, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      height: 100%;
+      background:
+        radial-gradient(circle at 50% 20%, rgba(255,255,255,0.96), rgba(226,237,235,0.9) 48%, rgba(212,214,212,0.95)),
+        repeating-linear-gradient(0deg, transparent 0, transparent 3px, rgba(0,0,0,0.03) 4px);
+      color: var(--ink);
+      font-family: var(--mono);
+      overflow: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          rgba(255,255,255,0.04) 0px,
+          rgba(255,255,255,0.04) 1px,
+          rgba(0,0,0,0.055) 2px,
+          transparent 4px
+        );
+      mix-blend-mode: multiply;
+      z-index: 50;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at center, transparent 52%, rgba(0,0,0,0.15)),
+        linear-gradient(90deg, rgba(255,0,255,0.025), transparent 14%, transparent 86%, rgba(0,255,255,0.035));
+      z-index: 51;
+    }
+
+    a {
+      color: var(--blue);
+    }
+
+    #three-stage {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+    }
+
+    .site-ui {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      pointer-events: none;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      padding: 22px 24px 16px;
+    }
+
+    header {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 22px;
+      align-items: start;
+      border-bottom: 1px solid rgba(0,0,0,0.22);
+      padding-bottom: 14px;
+      pointer-events: auto;
+    }
+
+    .brand {
+      font-size: clamp(2.15rem, 5vw, 5.2rem);
+      line-height: 0.88;
+      letter-spacing: -0.08em;
+      text-transform: uppercase;
+      text-shadow:
+        2px 0 rgba(0,255,255,0.3),
+        -2px 0 rgba(255,0,255,0.22);
+      user-select: none;
+    }
+
+    .descriptor {
+      font-size: 0.88rem;
+      text-transform: uppercase;
+      padding-top: 6px;
+      line-height: 1.25;
+    }
+
+    .status {
+      text-align: right;
+      font-size: 0.76rem;
+      line-height: 1.35;
+      text-transform: uppercase;
+      color: var(--blue);
+    }
+
+    .menu {
+      position: absolute;
+      top: 118px;
+      left: 32px;
+      width: 205px;
+      padding: 12px;
+      background: var(--panel);
+      border: 2px solid var(--blue);
+      box-shadow: var(--shadow);
+      pointer-events: auto;
+    }
+
+    .menu-title {
+      font-size: 1.25rem;
+      color: var(--blue);
+      margin-bottom: 8px;
+      border-bottom: 1px dotted var(--blue);
+      padding-bottom: 6px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .menu-links {
+      display: block;
+    }
+
+    .menu.collapsed .menu-links {
+      display: none;
+    }
+
+    .menu a {
+      display: block;
+      margin: 8px 0;
+      text-decoration: none;
+      color: var(--blue);
+    }
+
+    .menu a:hover {
+      color: var(--green);
+      transform: translateX(4px);
+    }
+
+    .intro {
+      position: absolute;
+      left: 42%;
+      top: 43%;
+      transform: translate(-50%, -50%);
+      max-width: 385px;
+      color: var(--blue);
+      font-size: 0.95rem;
+      line-height: 1.45;
+      text-transform: uppercase;
+      pointer-events: none;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.75);
+    }
+
+    .intro strong {
+      color: var(--ink);
+      background: rgba(255,255,255,0.62);
+      padding: 0 3px;
+    }
+
+    .project-card {
+      position: absolute;
+      right: 28px;
+      top: 150px;
+      width: 310px;
+      min-height: 210px;
+      background: var(--panel);
+      border: 2px solid var(--blue);
+      box-shadow: var(--shadow);
+      padding: 0;
+      pointer-events: auto;
+      transform: translateX(0);
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .project-card[hidden] {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(12px);
+      display: block;
+    }
+
+    .titlebar {
+      background: var(--blue);
+      color: #fff;
+      padding: 6px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+    }
+
+    .window-buttons {
+      letter-spacing: 0.12em;
+    }
+
+    .project-card-body {
+      padding: 13px;
+      font-size: 0.78rem;
+      line-height: 1.45;
+    }
+
+    .project-card h2 {
+      margin: 0 0 6px;
+      font-size: 1.6rem;
+      letter-spacing: -0.08em;
+      text-transform: uppercase;
+    }
+
+    .project-meta {
+      color: var(--green);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .project-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 13px;
+    }
+
+    .button {
+      display: inline-block;
+      border: 1px solid var(--blue);
+      padding: 7px 8px;
+      background: rgba(255,255,255,0.7);
+      color: var(--blue);
+      text-decoration: none;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+    }
+
+    .button:hover {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .terminal {
+      position: absolute;
+      left: 28px;
+      bottom: 52px;
+      width: 320px;
+      min-height: 128px;
+      background: rgba(244,255,244,0.82);
+      border: 1px solid var(--green);
+      padding: 12px;
+      color: var(--green);
+      font-size: 0.76rem;
+      pointer-events: auto;
+      box-shadow: var(--shadow);
+    }
+
+    .controls {
+      position: absolute;
+      right: 28px;
+      bottom: 52px;
+      width: 270px;
+      background: rgba(246,247,242,0.84);
+      border: 1px dotted var(--blue);
+      padding: 10px;
+      color: var(--blue);
+      font-size: 0.72rem;
+      line-height: 1.4;
+      text-transform: uppercase;
+      pointer-events: auto;
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      font-size: 0.78rem;
+      padding-top: 12px;
+      text-transform: uppercase;
+      pointer-events: auto;
+    }
+
+    .low-bandwidth {
+      cursor: pointer;
+    }
+
+    .low-bandwidth:hover {
+      color: var(--green);
+    }
+
+    .loading {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: grid;
+      place-items: center;
+      background: var(--paper);
+      color: var(--blue);
+      text-transform: uppercase;
+      transition: opacity 250ms ease;
+    }
+
+    .loading.is-hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    @media (max-width: 900px) {
+      .site-ui {
+        padding: 16px;
+      }
+
+      header {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .status {
+        text-align: left;
+      }
+
+      .menu {
+        position: absolute;
+        top: auto;
+        left: 16px;
+        bottom: 72px;
+        width: 210px;
+      }
+
+      .intro {
+        left: 50%;
+        top: 34%;
+        width: calc(100vw - 42px);
+      }
+
+      .project-card {
+        right: 16px;
+        left: 16px;
+        top: auto;
+        bottom: 90px;
+        width: auto;
+      }
+
+      .terminal,
+      .controls {
+        display: none;
+      }
+
+      footer {
+        font-size: 0.64rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="loading" id="loading">Loading volumetric archive...</div>
+
+  <canvas id="three-stage" aria-label="Three.js interactive project archive"></canvas>
+
+  <div class="site-ui">
+    <header>
+      <div class="brand">TOMMILNES.COM</div>
+      <div class="descriptor">
+        Artist<br />
+        Curator<br />
+        Critical Media Theorist
+      </div>
+      <div class="status">
+        Homepage prototype<br />
+        Three.js rotary archive<br />
+        WebGL / CRT / desktop interface
+      </div>
+    </header>
+
+    <nav class="menu" id="menu" aria-label="Main navigation">
+      <div class="menu-title" id="menu-toggle">☰ MENU</div>
+      <div class="menu-links">
+        <a href="./work/index.html">Work</a>
+        <a href="./writing/index.html">Writing</a>
+        <a href="./curating/index.html">Curating</a>
+        <a href="./research/index.html">Research</a>
+        <a href="./archive/index.html">Archive Index</a>
+        <a href="./about/index.html">About / CV</a>
+        <a href="mailto:hello@example.com">Contact</a>
+      </div>
+    </nav>
+
+    <section class="intro">
+      <strong>An interactive archive</strong> of artworks, curatorial projects, writing and research.<br /><br />
+      Drag to rotate. Scroll to zoom. Click any floating object to open.
+    </section>
+
+    <aside class="project-card" id="project-card" hidden>
+      <div class="titlebar">
+        <span id="project-file">project.dat</span>
+        <span class="window-buttons">□ ×</span>
+      </div>
+      <div class="project-card-body">
+        <h2 id="project-title">Project</h2>
+        <div class="project-meta" id="project-meta">TYPE / DATE</div>
+        <p id="project-description">Project description appears here.</p>
+        <div class="project-actions">
+          <a class="button" id="project-open" href="#">Open project →</a>
+          <button class="button" id="project-close" type="button">Close</button>
+        </div>
+      </div>
+    </aside>
+
+    <aside class="terminal" id="terminal">
+      &gt; archive.log<br /><br />
+      [INFO] connecting to tommilnes.com archive...<br />
+      [INFO] rotary display active<br />
+      [INFO] drag / scroll / click enabled<br />
+      [INFO] replace placeholders in PROJECTS array
+    </aside>
+
+    <aside class="controls">
+      Controls:<br />
+      Mouse drag = rotate archive<br />
+      Wheel = zoom<br />
+      Click object = project card<br />
+      Enter on object = follow link<br />
+      R = reset view
+    </aside>
+
+    <footer>
+      <span>Tom Milnes © 2026</span>
+      <span>WebGL / Three.js / GLSL</span>
+      <span>Sound: off</span>
+      <span class="low-bandwidth">[ Low bandwidth mode ]</span>
+    </footer>
+  </div>
+
+  <script type="module">
+    /*
+      -------------------------------------------------------
+      IMPORTS
+      -------------------------------------------------------
+      This prototype uses Three.js from a CDN so it runs as a
+      single HTML file.
+
+      For a production site, install Three.js locally:
+      npm install three
+      Then import it inside your build system.
+    */
+    import * as THREE from "https://unpkg.com/three@0.165.0/build/three.module.js";
+
+    /*
+      -------------------------------------------------------
+      PROJECT DATA — EDIT THIS SECTION
+      -------------------------------------------------------
+      Replace these placeholders with real project names, images,
+      descriptions and URLs.
+
+      IMAGE REPLACEMENT:
+      Put real image files inside /assets, then change:
+        image: "./assets/scanitas.jpg"
+
+      URL REPLACEMENT:
+      Change temporary hash links to real branch pages:
+        url: "./work/scanitas/index.html"
+
+      TYPES:
+      The "shape" field controls the 3D object style.
+      Current options:
+        "splat"   = point-cloud / volumetric cluster
+        "plane"   = image plane / project screen
+        "window"  = retro desktop window
+        "wire"    = wireframe sphere/object
+        "palm"    = low-poly palm-ish marker
+    */
+    const PROJECTS = [
+      {
+        id: "scanitas",
+        title: "Scanitas",
+        file: "scanitas.obj",
+        type: "Artist project / Online exhibition",
+        date: "2020–ongoing",
+        description: "Volumetric capture, photogrammetry, networked scanning and the circulation of 3D scans across platforms and infrastructures.",
+        url: "./work/scanitas/index.html",
+        image: "./assets/REPLACE_scanitas.jpg",
+        shape: "splat",
+        color: 0x0b6f8f
+      },
+      {
+        id: "polygon-palm",
+        title: "Polygon Palm",
+        file: "polygon_palm.html",
+        type: "Curatorial platform",
+        date: "2022–ongoing",
+        description: "A mobile and desktop specific NetArt platform for device-aware exhibition-making, interface critique and online curatorial experimentation.",
+        url: "./curating/polygon-palm/index.html",
+        image: "./assets/REPLACE_polygon_palm.jpg",
+        shape: "palm",
+        color: 0x009b45
+      },
+      {
+        id: "splaxtraction",
+        title: "Splaxtraction",
+        file: "splaxtraction.gspl",
+        type: "Writing / Research",
+        date: "2026",
+        description: "Gaussian Splats as extractive vision: ecological costs, computational infrastructures and the politics of volumetric seeing.",
+        url: "./writing/splaxtraction/index.html",
+        image: "./assets/REPLACE_splaxtraction.jpg",
+        shape: "splat",
+        color: 0xff33aa
+      },
+      {
+        id: "preserving-machine",
+        title: "The Preserving Machine",
+        file: "the_preserving_machine.exe",
+        type: "Article / Media theory",
+        date: "2026",
+        description: "Probabilistic imaging, synthetic reconstruction and the refracted infrastructures of the computational image.",
+        url: "./writing/the-preserving-machine/index.html",
+        image: "./assets/REPLACE_preserving_machine.jpg",
+        shape: "window",
+        color: 0x0614d8
+      },
+      {
+        id: "time-space-transmat",
+        title: "Time.Space.Transmat",
+        file: "time_space_transmat.mov",
+        type: "Curatorial project",
+        date: "2025–2026",
+        description: "A data-transfer exhibition structure exploring AI, translation, mediation, glitch and distributed online exhibition formats.",
+        url: "./curating/time-space-transmat/index.html",
+        image: "./assets/REPLACE_transmat.jpg",
+        shape: "plane",
+        color: 0x6666ff
+      },
+      {
+        id: "artist-led-platforms",
+        title: "Artist-Led Platforms",
+        file: "artist_led_platforms.pdf",
+        type: "Research / Writing",
+        date: "2026",
+        description: "Artist-led online platforms, para-institutional curatorial infrastructures and post-digital exhibition cultures.",
+        url: "./writing/artist-led-platforms/index.html",
+        image: "./assets/REPLACE_artist_led_platforms.jpg",
+        shape: "wire",
+        color: 0x222222
+      },
+      {
+        id: "netscapers",
+        title: "Netscapers",
+        file: "netscapers.map",
+        type: "Research project",
+        date: "2026",
+        description: "Creative web access, open XR futures and public agency within changing networked environments.",
+        url: "./research/netscapers/index.html",
+        image: "./assets/REPLACE_netscapers.jpg",
+        shape: "plane",
+        color: 0x00a6ff
+      }
+    ];
+
+    /*
+      -------------------------------------------------------
+      BASIC THREE.JS SETUP
+      -------------------------------------------------------
+    */
+    const canvas = document.querySelector("#three-stage");
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      antialias: true,
+      alpha: true
+    });
+
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0xf4f5ef, 0.018);
+
+    const camera = new THREE.PerspectiveCamera(
+      46,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      120
+    );
+    camera.position.set(0, 5.2, 15.5);
+
+    const archiveGroup = new THREE.Group();
+    scene.add(archiveGroup);
+
+    const clock = new THREE.Clock();
+    const raycaster = new THREE.Raycaster();
+    const pointer = new THREE.Vector2(99, 99);
+    const clickable = [];
+
+    let targetRotationY = 0;
+    let targetRotationX = -0.05;
+    let currentRotationY = 0;
+    let currentRotationX = -0.05;
+    let zoomTarget = 15.5;
+    let isDragging = false;
+    let previousPointer = { x: 0, y: 0 };
+    let hoveredObject = null;
+    let selectedProject = null;
+
+    /*
+      -------------------------------------------------------
+      LIGHTS
+      -------------------------------------------------------
+    */
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.9);
+    scene.add(ambientLight);
+
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.6);
+    directionalLight.position.set(4, 8, 6);
+    scene.add(directionalLight);
+
+    const blueLight = new THREE.PointLight(0x0614d8, 1.2, 40);
+    blueLight.position.set(-7, 5, 8);
+    scene.add(blueLight);
+
+    const magentaLight = new THREE.PointLight(0xff33aa, 0.85, 35);
+    magentaLight.position.set(8, 3, -6);
+    scene.add(magentaLight);
+
+    /*
+      -------------------------------------------------------
+      TEXTURE HELPERS
+      -------------------------------------------------------
+    */
+    const textureLoader = new THREE.TextureLoader();
+
+    function makeFallbackTexture(project) {
+      /*
+        This creates a generated placeholder texture when an image
+        file is missing. It means the prototype works immediately.
+
+        Replace image paths in PROJECTS to use real project imagery.
+      */
+      const size = 512;
+      const c = document.createElement("canvas");
+      c.width = size;
+      c.height = size;
+      const ctx = c.getContext("2d");
+
+      ctx.fillStyle = "#f4f5ef";
+      ctx.fillRect(0, 0, size, size);
+
+      ctx.strokeStyle = "#0614d8";
+      ctx.lineWidth = 6;
+      ctx.strokeRect(18, 18, size - 36, size - 36);
+
+      ctx.fillStyle = "#0614d8";
+      ctx.font = "bold 38px Courier New";
+      wrapText(ctx, project.title.toUpperCase(), 42, 100, 430, 44);
+
+      ctx.fillStyle = "#009b45";
+      ctx.font = "22px Courier New";
+      ctx.fillText(project.date, 42, 220);
+
+      ctx.strokeStyle = "rgba(0,0,0,0.18)";
+      ctx.lineWidth = 1;
+      for (let i = 0; i < 58; i++) {
+        const x = Math.random() * size;
+        const y = 260 + Math.random() * 180;
+        ctx.beginPath();
+        ctx.arc(x, y, 1 + Math.random() * 2.4, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = "#111";
+      ctx.font = "18px Courier New";
+      wrapText(ctx, "REPLACE IMAGE: " + project.image, 42, 420, 430, 22);
+
+      const texture = new THREE.CanvasTexture(c);
+      texture.colorSpace = THREE.SRGBColorSpace;
+      return texture;
+    }
+
+    function loadProjectTexture(project) {
+      const fallback = makeFallbackTexture(project);
+
+      const texture = textureLoader.load(
+        project.image,
+        (loaded) => {
+          loaded.colorSpace = THREE.SRGBColorSpace;
+          loaded.needsUpdate = true;
+        },
+        undefined,
+        () => {
+          // Missing image files are expected in this prototype.
+          // The generated fallback remains visible.
+        }
+      );
+
+      // Use fallback first; if real file exists it will load over it.
+      texture.image = fallback.image;
+      texture.needsUpdate = true;
+      texture.colorSpace = THREE.SRGBColorSpace;
+      return texture;
+    }
+
+    function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+      const words = text.split(" ");
+      let line = "";
+      for (let n = 0; n < words.length; n++) {
+        const testLine = line + words[n] + " ";
+        const metrics = ctx.measureText(testLine);
+        if (metrics.width > maxWidth && n > 0) {
+          ctx.fillText(line, x, y);
+          line = words[n] + " ";
+          y += lineHeight;
+        } else {
+          line = testLine;
+        }
+      }
+      ctx.fillText(line, x, y);
+    }
+
+    function makeTextSprite(text, options = {}) {
+      const fontSize = options.fontSize || 42;
+      const padding = options.padding || 16;
+      const c = document.createElement("canvas");
+      const ctx = c.getContext("2d");
+
+      ctx.font = `bold ${fontSize}px Courier New`;
+      const metrics = ctx.measureText(text);
+      c.width = Math.ceil(metrics.width + padding * 2);
+      c.height = Math.ceil(fontSize + padding * 2);
+
+      ctx.fillStyle = options.background || "#050505";
+      ctx.fillRect(0, 0, c.width, c.height);
+
+      ctx.fillStyle = options.color || "#ffffff";
+      ctx.font = `bold ${fontSize}px Courier New`;
+      ctx.textBaseline = "middle";
+      ctx.fillText(text, padding, c.height / 2);
+
+      const texture = new THREE.CanvasTexture(c);
+      texture.colorSpace = THREE.SRGBColorSpace;
+
+      const material = new THREE.SpriteMaterial({
+        map: texture,
+        transparent: true,
+        depthTest: false
+      });
+
+      const sprite = new THREE.Sprite(material);
+      const scale = options.scale || 0.012;
+      sprite.scale.set(c.width * scale, c.height * scale, 1);
+      return sprite;
+    }
+
+    /*
+      -------------------------------------------------------
+      3D OBJECT BUILDERS
+      -------------------------------------------------------
+    */
+    function createProjectObject(project, index, total) {
+      const holder = new THREE.Group();
+      holder.userData.project = project;
+      holder.userData.baseY = 0;
+
+      const angle = (index / total) * Math.PI * 2;
+      const radius = 6.2;
+      holder.position.set(
+        Math.cos(angle) * radius,
+        Math.sin(index * 1.7) * 1.2,
+        Math.sin(angle) * radius
+      );
+
+      holder.lookAt(0, holder.position.y, 0);
+
+      const label = makeTextSprite(project.title.toUpperCase(), { fontSize: 34, scale: 0.01 });
+      label.position.set(0, 1.55, 0.05);
+      holder.add(label);
+
+      let object;
+
+      if (project.shape === "splat") {
+        object = createSplatObject(project);
+      } else if (project.shape === "window") {
+        object = createWindowObject(project);
+      } else if (project.shape === "wire") {
+        object = createWireObject(project);
+      } else if (project.shape === "palm") {
+        object = createPalmObject(project);
+      } else {
+        object = createImagePlane(project);
+      }
+
+      object.userData.project = project;
+      object.userData.holder = holder;
+      object.name = project.id;
+      clickable.push(object);
+
+      holder.add(object);
+      archiveGroup.add(holder);
+
+      return holder;
+    }
+
+    function createImagePlane(project) {
+      const texture = loadProjectTexture(project);
+      const material = new THREE.MeshBasicMaterial({
+        map: texture,
+        transparent: true,
+        side: THREE.DoubleSide
+      });
+
+      const mesh = new THREE.Mesh(new THREE.PlaneGeometry(2.35, 1.55, 8, 8), material);
+      mesh.position.y = 0.25;
+
+      const frame = new THREE.LineSegments(
+        new THREE.EdgesGeometry(new THREE.PlaneGeometry(2.48, 1.68)),
+        new THREE.LineBasicMaterial({ color: 0x0614d8 })
+      );
+      frame.position.copy(mesh.position);
+      frame.position.z += 0.01;
+
+      const group = new THREE.Group();
+      group.add(mesh, frame);
+      group.userData.project = project;
+      group.userData.clickTarget = mesh;
+      clickable.push(mesh);
+      return group;
+    }
+
+    function createWindowObject(project) {
+      const group = new THREE.Group();
+      const texture = loadProjectTexture(project);
+
+      const body = new THREE.Mesh(
+        new THREE.BoxGeometry(2.55, 1.65, 0.08),
+        new THREE.MeshBasicMaterial({ map: texture })
+      );
+      body.position.y = 0.15;
+
+      const bar = new THREE.Mesh(
+        new THREE.BoxGeometry(2.55, 0.22, 0.1),
+        new THREE.MeshBasicMaterial({ color: 0x0614d8 })
+      );
+      bar.position.set(0, 1.08, 0.04);
+
+      const edges = new THREE.LineSegments(
+        new THREE.EdgesGeometry(new THREE.BoxGeometry(2.65, 1.88, 0.11)),
+        new THREE.LineBasicMaterial({ color: 0x111111 })
+      );
+      edges.position.y = 0.25;
+
+      group.add(body, bar, edges);
+      group.userData.project = project;
+      clickable.push(body);
+      return group;
+    }
+
+    function createWireObject(project) {
+      const group = new THREE.Group();
+
+      const geometry = new THREE.IcosahedronGeometry(1.06, 2);
+      const material = new THREE.MeshBasicMaterial({
+        color: project.color,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.85
+      });
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.position.y = 0.2;
+
+      const core = new THREE.Mesh(
+        new THREE.IcosahedronGeometry(0.22, 1),
+        new THREE.MeshBasicMaterial({ color: 0xff3355, transparent: true, opacity: 0.8 })
+      );
+      core.position.y = 0.2;
+
+      group.add(mesh, core);
+      group.userData.project = project;
+      clickable.push(mesh);
+      return group;
+    }
+
+    function createSplatObject(project) {
+      const group = new THREE.Group();
+
+      const count = 850;
+      const positions = new Float32Array(count * 3);
+      const colors = new Float32Array(count * 3);
+      const base = new THREE.Color(project.color);
+      const accent = new THREE.Color(0x0614d8);
+
+      for (let i = 0; i < count; i++) {
+        const i3 = i * 3;
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.acos((Math.random() * 2) - 1);
+        const r = 0.35 + Math.random() * 0.95;
+
+        positions[i3 + 0] = Math.sin(phi) * Math.cos(theta) * r * (1.15 + Math.random() * 0.4);
+        positions[i3 + 1] = Math.cos(phi) * r * 1.15 + 0.2;
+        positions[i3 + 2] = Math.sin(phi) * Math.sin(theta) * r * (0.65 + Math.random() * 0.6);
+
+        const mixed = base.clone().lerp(accent, Math.random() * 0.55);
+        colors[i3 + 0] = mixed.r;
+        colors[i3 + 1] = mixed.g;
+        colors[i3 + 2] = mixed.b;
+      }
+
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+      geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+
+      const material = new THREE.PointsMaterial({
+        size: 0.045,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.86,
+        depthWrite: false
+      });
+
+      const points = new THREE.Points(geometry, material);
+      points.userData.project = project;
+
+      const invisibleHitArea = new THREE.Mesh(
+        new THREE.SphereGeometry(1.25, 16, 16),
+        new THREE.MeshBasicMaterial({ visible: false })
+      );
+      invisibleHitArea.position.y = 0.2;
+      invisibleHitArea.userData.project = project;
+      invisibleHitArea.userData.visual = points;
+
+      group.add(points, invisibleHitArea);
+      group.userData.project = project;
+      clickable.push(invisibleHitArea);
+      return group;
+    }
+
+    function createPalmObject(project) {
+      const group = new THREE.Group();
+
+      const trunk = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.12, 0.18, 2.2, 7),
+        new THREE.MeshLambertMaterial({ color: 0x6b543d })
+      );
+      trunk.position.y = 0.1;
+      trunk.rotation.z = -0.08;
+
+      const leafMaterial = new THREE.MeshLambertMaterial({
+        color: project.color,
+        side: THREE.DoubleSide
+      });
+
+      for (let i = 0; i < 9; i++) {
+        const leaf = new THREE.Mesh(
+          new THREE.ConeGeometry(0.18, 1.45, 4),
+          leafMaterial
+        );
+        leaf.position.set(0, 1.25, 0);
+        leaf.rotation.z = Math.PI / 2;
+        leaf.rotation.y = (i / 9) * Math.PI * 2;
+        leaf.position.x = Math.cos(leaf.rotation.y) * 0.46;
+        leaf.position.z = Math.sin(leaf.rotation.y) * 0.46;
+        leaf.scale.set(0.55, 1, 0.14);
+        group.add(leaf);
+      }
+
+      const hit = new THREE.Mesh(
+        new THREE.SphereGeometry(1.15, 16, 16),
+        new THREE.MeshBasicMaterial({ visible: false })
+      );
+      hit.position.y = 0.55;
+      hit.userData.project = project;
+
+      group.add(trunk, hit);
+      group.userData.project = project;
+      clickable.push(hit);
+      return group;
+    }
+
+    /*
+      -------------------------------------------------------
+      ENVIRONMENT: GRID, ORBITS, ARCHIVE MAP
+      -------------------------------------------------------
+    */
+    function createFloorGrid() {
+      const grid = new THREE.GridHelper(34, 34, 0x0614d8, 0x808080);
+      grid.position.y = -2.25;
+      grid.material.transparent = true;
+      grid.material.opacity = 0.22;
+      scene.add(grid);
+    }
+
+    function createOrbitLines() {
+      for (let r = 3; r <= 8; r += 1.7) {
+        const curve = new THREE.EllipseCurve(0, 0, r, r, 0, Math.PI * 2);
+        const points = curve.getPoints(140).map(p => new THREE.Vector3(p.x, -0.4, p.y));
+        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+        const line = new THREE.LineLoop(
+          geometry,
+          new THREE.LineBasicMaterial({
+            color: 0x0614d8,
+            transparent: true,
+            opacity: 0.18
+          })
+        );
+        archiveGroup.add(line);
+      }
+    }
+
+    function createArchiveCenter() {
+      const group = new THREE.Group();
+
+      const wire = new THREE.Mesh(
+        new THREE.IcosahedronGeometry(1.15, 2),
+        new THREE.MeshBasicMaterial({
+          color: 0x0614d8,
+          wireframe: true,
+          transparent: true,
+          opacity: 0.3
+        })
+      );
+
+      const label = makeTextSprite("ARCHIVE_STATUS: ONLINE", {
+        fontSize: 28,
+        scale: 0.008,
+        background: "rgba(255,255,255,0.85)",
+        color: "#0614d8"
+      });
+      label.position.set(0, -1.45, 0);
+
+      group.add(wire, label);
+      archiveGroup.add(group);
+      return group;
+    }
+
+    createFloorGrid();
+    createOrbitLines();
+    const archiveCenter = createArchiveCenter();
+
+    const projectHolders = PROJECTS.map((project, index) =>
+      createProjectObject(project, index, PROJECTS.length)
+    );
+
+    /*
+      -------------------------------------------------------
+      UI CONNECTIONS
+      -------------------------------------------------------
+    */
+    const loading = document.querySelector("#loading");
+    const projectCard = document.querySelector("#project-card");
+    const projectFile = document.querySelector("#project-file");
+    const projectTitle = document.querySelector("#project-title");
+    const projectMeta = document.querySelector("#project-meta");
+    const projectDescription = document.querySelector("#project-description");
+    const projectOpen = document.querySelector("#project-open");
+    const projectClose = document.querySelector("#project-close");
+    const terminal = document.querySelector("#terminal");
+    const menu = document.querySelector("#menu");
+    const menuToggle = document.querySelector("#menu-toggle");
+
+    function showProject(project) {
+      selectedProject = project;
+      projectFile.textContent = project.file;
+      projectTitle.textContent = project.title;
+      projectMeta.textContent = `${project.type} / ${project.date}`;
+      projectDescription.textContent = project.description;
+      projectOpen.href = project.url;
+      projectCard.hidden = false;
+
+      terminal.innerHTML =
+        "&gt; archive.log<br><br>" +
+        `[OPEN] ${project.file}<br>` +
+        `[TYPE] ${project.type}<br>` +
+        `[DATE] ${project.date}<br>` +
+        "[INFO] project card active";
+    }
+
+    function hideProject() {
+      projectCard.hidden = true;
+      selectedProject = null;
+    }
+
+    projectClose.addEventListener("click", hideProject);
+    menuToggle.addEventListener("click", () => menu.classList.toggle("collapsed"));
+
+    /*
+      -------------------------------------------------------
+      POINTER / INTERACTION
+      -------------------------------------------------------
+    */
+    window.addEventListener("pointerdown", (event) => {
+      isDragging = true;
+      previousPointer.x = event.clientX;
+      previousPointer.y = event.clientY;
+    });
+
+    window.addEventListener("pointerup", () => {
+      isDragging = false;
+    });
+
+    window.addEventListener("pointermove", (event) => {
+      pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+      pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+      if (isDragging) {
+        const dx = event.clientX - previousPointer.x;
+        const dy = event.clientY - previousPointer.y;
+
+        targetRotationY += dx * 0.006;
+        targetRotationX += dy * 0.003;
+        targetRotationX = THREE.MathUtils.clamp(targetRotationX, -0.52, 0.32);
+
+        previousPointer.x = event.clientX;
+        previousPointer.y = event.clientY;
+      }
+    });
+
+    window.addEventListener("wheel", (event) => {
+      zoomTarget += event.deltaY * 0.01;
+      zoomTarget = THREE.MathUtils.clamp(zoomTarget, 8.5, 24);
+    }, { passive: true });
+
+    window.addEventListener("click", (event) => {
+      // Avoid selecting 3D objects when clicking HTML UI.
+      if (event.target.closest(".site-ui") && !event.target.matches("#three-stage")) {
+        return;
+      }
+
+      raycaster.setFromCamera(pointer, camera);
+      const hits = raycaster.intersectObjects(clickable, true);
+
+      if (hits.length > 0) {
+        const project = hits[0].object.userData.project;
+        if (project) showProject(project);
+      }
+    });
+
+    window.addEventListener("keydown", (event) => {
+      if (event.key.toLowerCase() === "r") {
+        targetRotationY = 0;
+        targetRotationX = -0.05;
+        zoomTarget = 15.5;
+      }
+
+      if (event.key === "Enter" && hoveredObject) {
+        const project = hoveredObject.userData.project;
+        if (project) window.location.href = project.url;
+      }
+
+      if (event.key === "Escape") {
+        hideProject();
+      }
+    });
+
+    function updateHover() {
+      raycaster.setFromCamera(pointer, camera);
+      const hits = raycaster.intersectObjects(clickable, true);
+      const nextHover = hits.length ? hits[0].object : null;
+
+      if (hoveredObject !== nextHover) {
+        if (hoveredObject) {
+          const visual = hoveredObject.userData.visual || hoveredObject;
+          if (visual.material) {
+            visual.material.opacity = visual.material.userData.originalOpacity || visual.material.opacity;
+          }
+        }
+
+        hoveredObject = nextHover;
+        document.body.style.cursor = hoveredObject ? "crosshair" : "default";
+
+        if (hoveredObject) {
+          const project = hoveredObject.userData.project;
+          terminal.innerHTML =
+            "&gt; archive.log<br><br>" +
+            `[HOVER] ${project.file}<br>` +
+            `[TITLE] ${project.title}<br>` +
+            "[ACTION] click to inspect";
+
+          const visual = hoveredObject.userData.visual || hoveredObject;
+          if (visual.material && "opacity" in visual.material) {
+            visual.material.userData.originalOpacity = visual.material.opacity;
+            visual.material.opacity = Math.min(1, visual.material.opacity + 0.18);
+          }
+        }
+      }
+    }
+
+    /*
+      -------------------------------------------------------
+      RESIZE
+      -------------------------------------------------------
+    */
+    window.addEventListener("resize", () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    /*
+      -------------------------------------------------------
+      ANIMATION LOOP
+      -------------------------------------------------------
+    */
+    function animate() {
+      const elapsed = clock.getElapsedTime();
+
+      currentRotationY = THREE.MathUtils.lerp(currentRotationY, targetRotationY, 0.06);
+      currentRotationX = THREE.MathUtils.lerp(currentRotationX, targetRotationX, 0.06);
+
+      archiveGroup.rotation.y = currentRotationY + elapsed * 0.055;
+      archiveGroup.rotation.x = currentRotationX;
+
+      camera.position.z = THREE.MathUtils.lerp(camera.position.z, zoomTarget, 0.08);
+      camera.lookAt(0, 0.1, 0);
+
+      archiveCenter.rotation.x = elapsed * 0.25;
+      archiveCenter.rotation.y = elapsed * 0.38;
+
+      projectHolders.forEach((holder, index) => {
+        holder.position.y = holder.userData.baseY + Math.sin(elapsed * 0.9 + index) * 0.18;
+        holder.rotation.y += 0.003;
+      });
+
+      updateHover();
+
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+
+    setTimeout(() => loading.classList.add("is-hidden"), 600);
+    animate();
+  </script>
+</body>
 </html>
