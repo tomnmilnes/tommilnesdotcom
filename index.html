@@ -44,11 +44,27 @@
       margin: 0;
       height: 100%;
       background:
-        radial-gradient(circle at 50% 20%, rgba(255,255,255,0.96), rgba(226,237,235,0.9) 48%, rgba(212,214,212,0.95)),
-        repeating-linear-gradient(0deg, transparent 0, transparent 3px, rgba(0,0,0,0.03) 4px);
+        radial-gradient(circle at 48% 24%, rgba(226, 235, 232, 0.82), rgba(137, 157, 158, 0.78) 38%, rgba(65, 79, 88, 0.96) 76%),
+        linear-gradient(126deg, #58666a, #768484 34%, #4d5964 68%, #68756f);
+      background-size: 140% 140%, 240% 240%;
+      animation: homepageGradientDrift 42s ease-in-out infinite alternate;
       color: var(--ink);
       font-family: var(--mono);
       overflow: hidden;
+    }
+
+    @keyframes homepageGradientDrift {
+      0% {
+        background-position: 46% 42%, 0% 50%;
+      }
+
+      50% {
+        background-position: 54% 48%, 100% 50%;
+      }
+
+      100% {
+        background-position: 50% 56%, 22% 50%;
+      }
     }
 
     body::before {
@@ -59,9 +75,9 @@
       background:
         repeating-linear-gradient(
           to bottom,
-          rgba(0, 0, 0, 0.04) 0px,
-          rgba(0, 0, 0, 0.04) 1px,
-          rgba(0,0,0,0.055) 2px,
+          rgba(0, 0, 0, 0.075) 0px,
+          rgba(0, 0, 0, 0.075) 1px,
+          rgba(0,0,0,0.092) 2px,
           transparent 4px
         );
       mix-blend-mode: multiply;
@@ -74,8 +90,8 @@
       inset: 0;
       pointer-events: none;
       background:
-        radial-gradient(circle at center, transparent 52%, rgba(0,0,0,0.15)),
-        linear-gradient(90deg, rgba(4, 0, 4, 0.025), transparent 14%, transparent 86%, rgba(0, 0, 0, 0.035));
+        radial-gradient(circle at center, transparent 46%, rgba(0,0,0,0.24)),
+        linear-gradient(90deg, rgba(4, 0, 4, 0.045), transparent 14%, transparent 86%, rgba(0, 0, 0, 0.07));
       z-index: 51;
     }
 
@@ -471,6 +487,14 @@
     </footer>-->
   </div>
 
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.165.0/build/three.module.js"
+      }
+    }
+  </script>
+
   <script type="module">
     /*
       -------------------------------------------------------
@@ -483,7 +507,9 @@
       npm install three
       Then import it inside your build system.
     */
-    import * as THREE from "https://unpkg.com/three@0.165.0/build/three.module.js";
+    import * as THREE from "three";
+    import { GLTFLoader } from "https://unpkg.com/three@0.165.0/examples/jsm/loaders/GLTFLoader.js";
+    import { RoomEnvironment } from "https://unpkg.com/three@0.165.0/examples/jsm/environments/RoomEnvironment.js";
 
     /*
       -------------------------------------------------------
@@ -519,7 +545,11 @@
         description: "Volumetric capture, photogrammetry, networked scanning and the circulation of 3D scans across platforms and infrastructures.",
         url: "./work/scanitas/index.html",
         image: "./assets/REPLACE_scanitas.jpg",
-        shape: "mokka",
+        shape: "gltf",
+        model: "./Mokka_Geranium.glb",
+        modelScale: 3.15,
+        modelPosition: [0, 0.0, 0],
+        modelRotation: [0,  0.001, 0],
         color: 0x0b6f8f
       },
       {
@@ -531,7 +561,11 @@
         description: "A mobile and desktop specific NetArt platform for device-aware exhibition-making, interface critique and online curatorial experimentation.",
         url: "./curating/polygon-palm/index.html",
         image: "./assets/REPLACE_polygon_palm.jpg",
-        shape: "palm",
+        shape: "gltf",
+        model: "./Polygon Palm logo 3d model.glb",
+        modelScale: 3.15,
+        modelPosition: [0, 0.2, 0],
+        modelRotation: [0, Math.PI / 2, 0],
         color: 0x009b45
       },
       {
@@ -555,7 +589,11 @@
         description: "Probabilistic imaging, synthetic reconstruction and the refracted infrastructures of the computational image.",
         url: "./writing/the-preserving-machine/index.html",
         image: "./assets/REPLACE_preserving_machine.jpg",
-        shape: "peony-bottle",
+        shape: "gltf",
+        model: "./Haig_hydrangea.glb",
+        modelScale: 3.15,
+        modelPosition: [0, 0.2, 0],
+        modelRotation: [0, Math.PI / 2, 0],
         color: 0x0614d8
       },
       {
@@ -567,7 +605,11 @@
         description: "A data-transfer exhibition structure exploring AI, translation, mediation, glitch and distributed online exhibition formats.",
         url: "./curating/time-space-transmat/index.html",
         image: "./assets/REPLACE_transmat.jpg",
-        shape: "saturn-text",
+        shape: "gltf",
+        model: "./time-space-transmat-title.glb",
+        modelScale: 3.15,
+        modelPosition: [0, 0.2, 0],
+        modelRotation: [0, Math.PI / 2, 0],
         color: 0x6666ff
       },
       {
@@ -579,7 +621,11 @@
         description: "Augmented reality sustainibility project in conjunction with Green Minds utilizing Microsoft Hololens.",
         url: "./writing/ashnihilation/index.html",
         image: "./assets/REPLACE_ashnihilation.jpg",
-        shape: "lighthouse-tree",
+        shape: "gltf",
+        model: "./Smeaton_ash.glb",
+        modelScale: 3.15,
+        modelPosition: [0, 0.2, 0],
+        modelRotation: [0, Math.PI / 2, 0],
         color: 0x222222
       },
       {
@@ -591,7 +637,11 @@
         description: "Kinetic sound installation with Walkmans and tape loops.",
         url: "./research/deep-relaxation/index.html",
         image: "./assets/REPLACE_deep_relaxation.jpg",
-        shape: "walkman",
+        shape: "gltf",
+        model: "./cassette player 3d model.glb",
+        modelScale: 3.15,
+        modelPosition: [0, 0.2, 0],
+        modelRotation: [0, Math.PI / 2, 0],
         color: 0x00a6ff
       }
     ];
@@ -612,10 +662,12 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.08;
+    renderer.toneMappingExposure = 1.22;
 
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0xf4f5ef, 0.018);
+    const pmremGenerator = new THREE.PMREMGenerator(renderer);
+    scene.environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
+    scene.fog = new THREE.FogExp2(0x5f6f72, 0.012);
 
     const camera = new THREE.PerspectiveCamera(
       46,
@@ -651,21 +703,30 @@
       LIGHTS
       -------------------------------------------------------
     */
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.9);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
 
-    const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0xb6c7bd, 1.15);
+    const hemisphereLight = new THREE.HemisphereLight(0xffffff, 0xb6c7bd, 1.0);
     scene.add(hemisphereLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.6);
-    directionalLight.position.set(4, 8, 6);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.8);
+    directionalLight.position.set(2.5, 10.5, 5.5);
     scene.add(directionalLight);
 
-    const blueLight = new THREE.PointLight(0x0614d8, 1.2, 40);
+    const modelKeyLight = new THREE.SpotLight(0xffffff, 6.4, 30, Math.PI / 6.2, 0.42, 0.5);
+    modelKeyLight.position.set(0, 11.5, 6.5);
+    modelKeyLight.target.position.set(0, 0.2, 0);
+    scene.add(modelKeyLight, modelKeyLight.target);
+
+    const modelRimLight = new THREE.DirectionalLight(0xf7fbff, 1.0);
+    modelRimLight.position.set(-5, 6.5, -4.5);
+    scene.add(modelRimLight);
+
+    const blueLight = new THREE.PointLight(0x0614d8, 1.6, 40);
     blueLight.position.set(-7, 5, 8);
     scene.add(blueLight);
 
-    const magentaLight = new THREE.PointLight(0xff33aa, 0.85, 35);
+    const magentaLight = new THREE.PointLight(0xff33aa, 1.1, 35);
     magentaLight.position.set(8, 3, -6);
     scene.add(magentaLight);
 
@@ -675,6 +736,8 @@
       -------------------------------------------------------
     */
     const textureLoader = new THREE.TextureLoader();
+    const gltfLoader = new GLTFLoader();
+    const GLB_MODEL_URL = "./time-space-transmat-title.glb";
 
     function makeFallbackTexture(project) {
       /*
@@ -818,13 +881,15 @@
       holder.lookAt(0, holder.position.y, 0);
 
       const label = makeTextSprite(project.title.toUpperCase(), { fontSize: 24, scale: 0.01 });
-      label.position.set(0, 1.55, 0.05);
+      label.position.set(0, project.shape === "gltf" ? 2.25 : 1.55, 0.05);
       holder.add(label);
 
       let object;
 
       if (project.shape === "splat") {
         object = createSplatObject(project);
+      } else if (project.shape === "gltf") {
+        object = createGltfObject(project);
       } else if (project.shape === "mokka") {
         object = createMokkaPotObject(project);
       } else if (project.shape === "rolodex") {
@@ -853,6 +918,9 @@
       clickable.push(object);
 
       holder.add(object);
+      if (project.shape === "gltf") {
+        holder.add(createSoftObjectShadow());
+      }
       archiveGroup.add(holder);
 
       return holder;
@@ -988,6 +1056,127 @@
       group.add(points, invisibleHitArea);
       group.userData.project = project;
       clickable.push(invisibleHitArea);
+      return group;
+    }
+
+    function createGltfObject(project) {
+      const group = new THREE.Group();
+      const placeholder = createGltfPlaceholder(project);
+      const localKeyLight = new THREE.PointLight(0xffffff, 3.2, 7.5, 1.35);
+      localKeyLight.position.set(0.35, 3.2, 1.9);
+      const localRimLight = new THREE.PointLight(0xddeaff, 1.35, 6, 1.55);
+      localRimLight.position.set(-1.8, 1.8, -2.4);
+      group.add(placeholder);
+      group.add(localKeyLight, localRimLight);
+      group.userData.project = project;
+
+      const modelUrl = encodeURI(project.model || GLB_MODEL_URL);
+      gltfLoader.load(
+        modelUrl,
+        (gltf) => {
+          const model = gltf.scene;
+          model.name = `${project.id}-gltf-model`;
+          let meshCount = 0;
+          model.traverse((child) => {
+            if (child.isMesh) {
+              meshCount += 1;
+              child.castShadow = false;
+              child.receiveShadow = false;
+              if (child.material) {
+                child.material = child.material.clone();
+                child.material.side = THREE.DoubleSide;
+                child.material.envMapIntensity = Math.max(child.material.envMapIntensity || 0, 1.85);
+                child.material.needsUpdate = true;
+              }
+            }
+          });
+
+          const box = new THREE.Box3().setFromObject(model);
+          const size = box.getSize(new THREE.Vector3());
+          const center = box.getCenter(new THREE.Vector3());
+          const maxAxis = Math.max(size.x, size.y, size.z) || 1;
+          const normalizedScale = project.modelScale ?? 1.55;
+          const scale = normalizedScale / maxAxis;
+
+          model.scale.setScalar(scale);
+          model.position.set(-center.x * scale, -center.y * scale, -center.z * scale);
+
+          const offset = project.modelPosition || [0, 0, 0];
+          const rotation = project.modelRotation || [0, 0, 0];
+          model.position.add(new THREE.Vector3(offset[0] || 0, offset[1] || 0, offset[2] || 0));
+          model.rotation.set(rotation[0] || 0, rotation[1] || 0, rotation[2] || 0);
+
+          group.remove(placeholder);
+          group.add(model);
+          group.userData.loadedModel = model;
+          group.userData.modelBaseRotation = new THREE.Euler(model.rotation.x, model.rotation.y, model.rotation.z);
+          group.userData.animate = (elapsed) => {
+            model.rotation.x = group.userData.modelBaseRotation.x + Math.sin(elapsed * 0.9) * 0.035;
+            model.rotation.y = group.userData.modelBaseRotation.y + elapsed * 0.42;
+            model.rotation.z = group.userData.modelBaseRotation.z + Math.sin(elapsed * 0.7) * 0.025;
+          };
+          group.userData.gltfStatus = {
+            loaded: true,
+            meshCount,
+            sourceSize: size.toArray(),
+            sourceCenter: center.toArray(),
+            scale
+          };
+        },
+        undefined,
+        (error) => {
+          placeholder.userData.loadFailed = true;
+          group.userData.gltfStatus = {
+            loaded: false,
+            error: error?.message || "GLB load failed"
+          };
+        }
+      );
+
+      addHitSphere(group, project, 1.45, 0.1);
+      return group;
+    }
+
+    function createSoftObjectShadow() {
+      const shadow = new THREE.Mesh(
+        new THREE.CircleGeometry(1.22, 48),
+        new THREE.MeshBasicMaterial({
+          color: 0x050505,
+          transparent: true,
+          opacity: 0.095,
+          depthWrite: false
+        })
+      );
+      shadow.name = "soft-object-shadow";
+      shadow.position.set(0, -1.35, 0);
+      shadow.rotation.x = -Math.PI / 2;
+      shadow.scale.set(1.45, 0.62, 1);
+      shadow.renderOrder = -1;
+      return shadow;
+    }
+
+    function createGltfPlaceholder(project) {
+      const group = new THREE.Group();
+      const material = new THREE.MeshStandardMaterial({
+        color: project.color || 0x0614d8,
+        roughness: 0.36,
+        metalness: 0.28,
+        transparent: true,
+        opacity: 0.88
+      });
+      const wireMaterial = new THREE.MeshBasicMaterial({
+        color: 0x0614d8,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.42
+      });
+      const core = new THREE.Mesh(new THREE.IcosahedronGeometry(0.82, 2), material);
+      const wire = new THREE.Mesh(new THREE.IcosahedronGeometry(0.92, 2), wireMaterial);
+      group.add(core, wire);
+      group.userData.animate = (elapsed) => {
+        wire.rotation.x = elapsed * 0.35;
+        wire.rotation.y = elapsed * 0.48;
+      };
       return group;
     }
 
@@ -1488,10 +1677,10 @@
       -------------------------------------------------------
     */
     function createFloorGrid() {
-      const grid = new THREE.GridHelper(34, 34, 0x0614d8, 0x808080);
+      const grid = new THREE.GridHelper(34, 34, 0x37f7ff, 0x1859ff);
       grid.position.y = -2.25;
       grid.material.transparent = true;
-      grid.material.opacity = 0.22;
+      grid.material.opacity = 0.34;
       scene.add(grid);
     }
 
@@ -1525,7 +1714,7 @@
         })
       );
 
-      const label = makeTextSprite("ARCHIVE_STATUS: ONLINE", {
+      const label = makeTextSprite("Welcome to tommilnes.com", {
         fontSize: 28,
         scale: 0.008,
         background: "rgba(255,255,255,0.85)",
@@ -1829,6 +2018,15 @@
           x: (position.x + 1) * window.innerWidth / 2,
           y: (-position.y + 1) * window.innerHeight / 2,
           z: position.z
+        };
+      }),
+      getGltfStatuses: () => projectHolders.map((holder) => {
+        const project = holder.userData.project;
+        const object = holder.children.find((child) => child.name === project.id);
+        return {
+          id: project.id,
+          shape: project.shape,
+          status: object?.userData.gltfStatus || null
         };
       }),
       resetView
