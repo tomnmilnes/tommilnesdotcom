@@ -16,8 +16,8 @@
     2. Replace placeholder image URLs in PROJECTS with your own files.
     3. Put your images in /assets and update the paths, e.g.
        image: "./assets/scanitas.jpg"
-    4. Change project links from "#scanitas" to real branch pages, e.g.
-       url: "./work/scanitas/index.html"
+    4. Change project links to the matching project pages, e.g.
+       url: "./Scanitas.html"
 
     The branch/project pages can stay simple HTML/CMS pages.
     This homepage can later be moved into Astro, Next.js, or WordPress.
@@ -155,12 +155,13 @@
 
     .menu {
       position: absolute;
-      top: 32px;
-      left: 32px;
-      width: 205px;
+      top: 0;
+      left: 0;
+      width:99%;
+      height: 99%;
       padding: 12px;
       background: var(--panel);
-      border: 2px solid var(--blue);
+      border: 5px solid var(--blue);
       box-shadow: var(--shadow);
       pointer-events: auto;
     }
@@ -430,10 +431,8 @@
     <nav class="menu" id="menu" aria-label="Main navigation">
       <div class="menu-title" id="menu-toggle">☰ Tom Milnes</div>
       <div class="menu-links">
-        <a href="./work/index.html">Artwork</a>
-        <a href="./curating/index.html">Curating</a>
-        <a href="./research/index.html">Research</a>
-        <a href="./about/index.html">About / Contact</a>
+        <a href="./artwork.html">UNDER CONSTRUCTION - New tommilnes.com will be up soon</a>
+   
         
       </div>
     </nav>
@@ -453,7 +452,7 @@
         <div class="project-meta" id="project-meta">TYPE / DATE</div>
         <p id="project-description">Project description appears here.</p>
         <div class="project-actions">
-          <a class="button" id="project-open" href="#">Open project →</a>
+          <a class="button" id="project-open" href="./artwork.html">Open project →</a>
           <button class="button" id="project-close" type="button">Close</button>
         </div>
       </div>
@@ -521,17 +520,10 @@
         image: "./assets/scanitas.jpg"
 
       URL REPLACEMENT:
-      Change temporary hash links to real branch pages:
-        url: "./work/scanitas/index.html"
+      Change temporary links to real project pages:
+        url: "./Scanitas.html"
 
-      TYPES:
-      The "shape" field controls the 3D object style.
-      Current options:
-        "splat"   = point-cloud / volumetric cluster
-        "plane"   = image plane / project screen
-        "window"  = retro desktop window
-        "wire"    = wireframe sphere/object
-        "palm"    = low-poly palm-ish marker
+      
     */
     const PROJECTS = [
       {
@@ -541,13 +533,13 @@
         type: "Artist project / Online exhibition",
         date: "2020–ongoing",
         description: "Volumetric capture, photogrammetry, networked scanning and the circulation of 3D scans across platforms and infrastructures.",
-        url: "./work/scanitas/index.html",
+        url: "./Scanitas.html",
         image: "./assets/REPLACE_scanitas.jpg",
         shape: "gltf",
         model: "./Mokka_Geranium.glb",
         modelScale: 3.15,
         modelPosition: [0, 0.0, 0],
-        modelRotation: [0,  0.001, 0],
+        modelRotation: [0,  Math.PI / 2, 0],
         color: 0x0b6f8f
       },
       {
@@ -557,7 +549,7 @@
         type: "Curatorial platform",
         date: "2022–ongoing",
         description: "A mobile and desktop specific NetArt platform for device-aware exhibition-making, interface critique and online curatorial experimentation.",
-        url: "./curating/polygon-palm/index.html",
+        url: "./polygonpalm.html",
         image: "./assets/REPLACE_polygon_palm.jpg",
         shape: "gltf",
         model: "./Polygon Palm logo 3d model.glb",
@@ -573,9 +565,12 @@
         type: "Exhibition / Installation",
         date: "2024",
         description: "Gaussian Splats as extractive vision: ecological costs, computational infrastructures and the politics of volumetric seeing.",
-        url: "./writing/rolodex-propaganda/index.html",
+        url: "./rolodex.html",
         image: "./assets/REPLACE_rolodex_propaganda.jpg",
         shape: "rolodex",
+        modelScale: 3.15,
+        modelPosition: [0, 0.2, 0],
+        modelRotation: [0, Math.PI / 2, 0],
         color: 0xff33aa
       },
       {
@@ -585,8 +580,8 @@
         type: "Exhibition",
         date: "2025",
         description: "Probabilistic imaging, synthetic reconstruction and the refracted infrastructures of the computational image.",
-        url: "./writing/the-preserving-machine/index.html",
-        image: "./assets/REPLACE_preserving_machine.jpg",
+        url: "./Scanitas-lab.html",
+        image: "./",
         shape: "gltf",
         model: "./Haig_hydrangea.glb",
         modelScale: 3.15,
@@ -601,13 +596,13 @@
         type: "Curatorial project",
         date: "2025–2026",
         description: "A data-transfer exhibition structure exploring AI, translation, mediation, glitch and distributed online exhibition formats.",
-        url: "./curating/time-space-transmat/index.html",
-        image: "./assets/REPLACE_transmat.jpg",
+        url: "./timespacetransmat.html",
+        image: "./timespacetransmat.html",
         shape: "gltf",
         model: "./time-space-transmat-title.glb",
         modelScale: 3.15,
         modelPosition: [0, 0.2, 0],
-        modelRotation: [0, Math.PI / 2, 0],
+        modelRotation: [Math.PI / 4, Math.PI / 2, 0],
         color: 0x6666ff
       },
       {
@@ -617,7 +612,7 @@
         type: "Research / Writing",
         date: "2022",
         description: "Augmented reality sustainibility project in conjunction with Green Minds utilizing Microsoft Hololens.",
-        url: "./writing/ashnihilation/index.html",
+        url: "./ashnihilation.html",
         image: "./assets/REPLACE_ashnihilation.jpg",
         shape: "gltf",
         model: "./Smeaton_ash.glb",
@@ -633,12 +628,28 @@
         type: "Research / Writing",
         date: "2026",
         description: "Kinetic sound installation with Walkmans and tape loops.",
-        url: "./research/deep-relaxation/index.html",
+        url: "./deeprelaxation.html",
         image: "./assets/REPLACE_deep_relaxation.jpg",
         shape: "gltf",
         model: "./cassette player 3d model.glb",
         modelScale: 3.15,
         modelPosition: [0, 0.2, 0],
+        modelRotation: [0, Math.PI / 2, 0],
+        color: 0x00a6ff
+      },
+      {
+        id: "Ex-Machines",
+        title: "Ex-Machines",
+        file: "ex-machines.pdf",
+        type: "Photographic research",
+        date: "2011–2026",
+        description: "Fantasy tech objects, speculative design and the aesthetics of the past.",
+        url: "./exmachines.html",
+        image: "./assets/REPLACE_ex_machines.jpg",
+        shape: "gltf",
+        model: "./Tom Milnes - RX404.glb",
+        modelScale: 2.15,
+        modelPosition: [0, 0, 0],
         modelRotation: [0, Math.PI / 2, 0],
         color: 0x00a6ff
       }
@@ -684,9 +695,9 @@
     const clickable = [];
 
     let targetRotationY = 0;
-    let targetRotationX = -0.05;
+    let targetRotationX = 0.05;
     let currentRotationY = 0;
-    let currentRotationX = -0.05;
+    let currentRotationX = 0.05;
     let zoomTarget = 15.5;
     let isDragging = false;
     let previousPointer = { x: 0, y: 0 };
@@ -1110,7 +1121,7 @@
           group.userData.modelBaseRotation = new THREE.Euler(model.rotation.x, model.rotation.y, model.rotation.z);
           group.userData.animate = (elapsed) => {
             model.rotation.x = group.userData.modelBaseRotation.x + Math.sin(elapsed * 0.9) * 0.035;
-            model.rotation.y = group.userData.modelBaseRotation.y + elapsed * 0.42;
+            model.rotation.y = group.userData.modelBaseRotation.y + elapsed * 0.22;
             model.rotation.z = group.userData.modelBaseRotation.z + Math.sin(elapsed * 0.7) * 0.025;
           };
           group.userData.gltfStatus = {
