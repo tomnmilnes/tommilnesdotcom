@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Project Title — Tom Milnes</title>
+
+  <!--
+    TOMMILNES.COM — EXHIBITION DOCUMENTATION TEMPLATE
+    -------------------------------------------------------
+    Really simple branch page for documenting exhibitions / artworks.
+
+    Design principle:
+    - imagery first
+    - minimal title/text
+    - simple captions
+    - optional embedded media
+    - small metadata line
+    - same small menu as the simplified homepage
+
+    Replace:
+    - PROJECT TITLE
+    - image paths beginning ../../assets/REPLACE_
+    - captions
+    - video embed URL
+    - short project text
+  -->
+
+  <style>
+    :root {
+      --blue: #0614d8;
+      --green: #009b45;
+      --ink: #070707;
+      --paper: #f4f5ef;
+      --panel: rgba(246, 247, 242, 0.88);
+      --shadow: 6px 6px 0 rgba(0,0,0,0.18);
+      --mono: "Courier New", Courier, monospace;
+      --sans: Arial, Helvetica, sans-serif;
+      --max: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background-color: #f5f4ef;
+      background-image:
+        radial-gradient(circle at 18% 22%, rgba(131, 205, 158, 0.18), transparent 43%),
+        radial-gradient(circle at 82% 18%, rgba(239, 174, 119, 0.16), transparent 41%),
+        radial-gradient(circle at 70% 80%, rgba(188, 160, 220, 0.16), transparent 45%),
+        radial-gradient(circle at 20% 82%, rgba(126, 181, 226, 0.17), transparent 43%);
+      background-size: 160% 160%, 165% 165%, 170% 170%, 165% 165%;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      animation: pageGradientDrift 42s ease-in-out infinite alternate;
+      color: var(--ink);
+      font-family: var(--mono);
+    }
+
+    @keyframes pageGradientDrift {
+      0% { background-position: 8% 10%, 92% 8%, 78% 92%, 8% 88%; }
+      50% { background-position: 20% 18%, 78% 22%, 66% 74%, 24% 70%; }
+      100% { background-position: 14% 26%, 88% 14%, 74% 84%, 14% 76%; }
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at center, transparent 62%, rgba(68, 55, 88, 0.05)),
+        linear-gradient(90deg, rgba(74, 142, 126, 0.025), transparent 18%, transparent 82%, rgba(129, 91, 151, 0.03));
+      z-index: 51;
+    }
+
+    a {
+      color: var(--ink);
+    }
+
+    .menu {
+      position: fixed;
+      top: 32px;
+      left: 32px;
+      width: 205px;
+      padding: 12px;
+      background: var(--panel);
+      border: 2px solid var(--blue);
+      box-shadow: var(--shadow);
+      z-index: 30;
+    }
+
+    .menu-title {
+      font-size: 1rem;
+      color: var(--ink);
+      margin-bottom: 8px;
+      border-bottom: 1px dotted var(--blue);
+      padding-bottom: 6px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .menu-links {
+      display: block;
+    }
+
+    .menu.collapsed .menu-links {
+      display: none;
+    }
+
+    .menu a {
+      display: block;
+      margin: 8px 0;
+      text-decoration: none;
+      color: var(--ink);
+    }
+
+    .menu a:hover {
+      color: var(--ink);
+      transform: translateX(4px);
+    }
+
+    main {
+      position: relative;
+      z-index: 2;
+      width: min(var(--max), calc(100vw - 56px));
+      margin: 0 auto;
+      padding: 34px 0 56px;
+    }
+
+    .project {
+      margin-left: clamp(0px, 12vw, 140px);
+    }
+
+    .topline {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 20px;
+      margin-bottom: 14px;
+      color: var(--ink);
+      text-transform: uppercase;
+      font-size: 0.78rem;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 50vw;
+      font-size: clamp(1.6rem, 3.4vw, 3.4rem);
+      line-height: 0.9;
+      letter-spacing: -0.08em;
+      text-transform: uppercase;
+      text-shadow:
+        2px 0 rgba(0,255,255,0.22),
+        -2px 0 rgba(255,0,255,0.16);
+    }
+
+    .meta {
+      text-align: right;
+      color: var(--ink);
+      line-height: 1.35;
+    }
+
+    .hero {
+      margin: 0 0 16px;
+      background: rgba(255,255,255,0.38);
+      border: 1px solid rgba(0,0,0,0.32);
+      padding: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero img,
+    .image-grid img {
+      display: block;
+      width: 100%;
+      object-fit: cover;
+      background:
+        radial-gradient(circle, rgba(0,255,120,0.42), transparent 35%),
+        repeating-linear-gradient(45deg, #111 0 2px, #333 2px 4px);
+    }
+
+    .hero img {
+      aspect-ratio: 16 / 9;
+      max-height: 78vh;
+    }
+
+    figcaption {
+      margin-top: 7px;
+      font-size: 0.72rem;
+      line-height: 1.35;
+      color: var(--ink);
+      text-transform: uppercase;
+    }
+
+    .summary {
+      max-width: 760px;
+      margin: 18px 0 26px;
+      padding: 12px 14px;
+      background: rgba(246,247,242,0.74);
+      border-left: 2px solid var(--blue);
+      font-family: var(--sans);
+      font-size: 0.98rem;
+      line-height: 1.55;
+    }
+
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin: 0 0 22px;
+    }
+
+    .image-grid figure {
+      margin: 0;
+      background: rgba(255,255,255,0.34);
+      border: 1px solid rgba(0,0,0,0.26);
+      padding: 8px;
+      box-shadow: 4px 4px 0 rgba(0,0,0,0.12);
+    }
+
+    .image-grid img {
+      aspect-ratio: 4 / 3;
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    .full-width img {
+      aspect-ratio: 16 / 9;
+    }
+
+    .embed {
+      margin: 0 0 22px;
+      background: rgba(255,255,255,0.34);
+      border: 1px solid rgba(0,0,0,0.26);
+      padding: 8px;
+      box-shadow: 4px 4px 0 rgba(0,0,0,0.12);
+    }
+
+    .embed-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #111;
+      overflow: hidden;
+    }
+
+    .embed-frame iframe,
+    .embed-frame video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .notes {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 260px;
+      gap: 24px;
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px dotted rgba(6,20,216,0.65);
+    }
+
+    .notes h2 {
+      margin: 0 0 8px;
+      color: var(--ink);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+
+    .notes p,
+    .notes li {
+      font-family: var(--sans);
+      font-size: 0.96rem;
+      line-height: 1.55;
+    }
+
+    .details {
+      color: var(--ink);
+      font-size: 0.74rem;
+      line-height: 1.35;
+      text-transform: uppercase;
+    }
+
+    .details dl {
+      margin: 0;
+    }
+
+    .details dt {
+      color: var(--ink);
+      margin-top: 10px;
+    }
+
+    .details dd {
+      margin: 2px 0 0;
+    }
+
+    .links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .button {
+      display: inline-block;
+      border: 1px solid var(--blue);
+      padding: 7px 8px;
+      background: rgba(255,255,255,0.62);
+      color: var(--ink);
+      text-decoration: none;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+    }
+
+    .button:hover {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .menu {
+      border-color: var(--ink);
+      color: var(--ink);
+      font-family: var(--mono);
+      font-size: 1rem;
+      line-height: 1.25;
+    }
+
+    .menu-title,
+    .menu a,
+    .menu a:hover {
+      color: var(--ink);
+    }
+
+    .menu-title {
+      border-bottom-color: var(--ink);
+    }
+
+    @media (max-width: 900px) {
+      .menu {
+        top: 16px;
+        left: 16px;
+        width: 210px;
+      }
+
+      main {
+        width: calc(100vw - 32px);
+        padding-top: 104px;
+      }
+
+      .project {
+        margin-left: 0;
+      }
+
+      .topline {
+        display: block;
+      }
+
+      h1 {
+        max-width: none;
+        margin-bottom: 8px;
+      }
+
+      .meta {
+        text-align: left;
+      }
+
+      .image-grid,
+      .notes {
+        grid-template-columns: 1fr;
+      }
+
+      .full-width {
+        grid-column: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="menu" id="menu" aria-label="Main navigation">
+    <div class="menu-title" id="menu-toggle">☰ Tom Milnes</div>
+    <div class="menu-links">
+      <a href="./index.html">Home</a>
+      <a href="./artwork.html">Artwork</a>
+      <a href="./curating.html">Curating</a>
+      <a href="./research.html">Research</a>
+      <a href="./about.html">About / Contact</a>
+    </div>
+  </nav>
+
+  <main>
+    <article class="project">
+      <section class="topline">
+        <h1>Project Title</h1>
+        <div class="meta">
+          Exhibition / Installation<br />
+          Venue, year
+        </div>
+      </section>
+
+      <figure class="hero">
+        <img src="../../assets/REPLACE_hero.jpg" alt="Replace with a concise description of the main installation image." />
+        <figcaption>Main documentation image. Replace with title, venue, date and photo credit.</figcaption>
+      </figure>
+
+      <p class="summary">
+        Short project description. Keep this concise: two to four sentences introducing the exhibition, artwork,
+        context and core idea. The page is primarily for documentation, so the images should carry the page.
+      </p>
+
+      <section class="image-grid" aria-label="Exhibition documentation">
+        <figure>
+          <img src="../../assets/REPLACE_doc-01.jpg" alt="Replace with image description." />
+          <figcaption>Installation view / detail caption.</figcaption>
+        </figure>
+
+        <figure>
+          <img src="../../assets/REPLACE_doc-02.jpg" alt="Replace with image description." />
+          <figcaption>Installation view / detail caption.</figcaption>
+        </figure>
+
+        <figure class="full-width">
+          <img src="../../assets/REPLACE_doc-03.jpg" alt="Replace with image description." />
+          <figcaption>Wide installation view or exhibition documentation image.</figcaption>
+        </figure>
+
+        <figure>
+          <img src="../../assets/REPLACE_doc-04.jpg" alt="Replace with image description." />
+          <figcaption>Process, object, screen or installation detail.</figcaption>
+        </figure>
+
+        <figure>
+          <img src="../../assets/REPLACE_doc-05.jpg" alt="Replace with image description." />
+          <figcaption>Process, object, screen or installation detail.</figcaption>
+        </figure>
+      </section>
+
+      <section class="notes">
+        <div>
+          <h2>Notes</h2>
+          <p>
+            Optional longer text. Use this only where needed: project context, exhibition statement, materials,
+            process, collaborators or critical framing. Keep this section below the imagery so the page remains
+            documentation-led.
+          </p>
+
+          <div class="links">
+            <a class="button" href="./index.html">Back to homepage</a>
+            <a class="button" href="./artwork.html">More artwork</a>
+          </div>
+        </div>
+
+        <aside class="details" aria-label="Project details">
+          <dl>
+            <dt>Title</dt>
+            <dd>Project Title</dd>
+
+            <dt>Date</dt>
+            <dd>2026</dd>
+
+            <dt>Format</dt>
+            <dd>Exhibition / installation / documentation</dd>
+
+            <dt>Venue</dt>
+            <dd>Venue name</dd>
+
+            <dt>Materials</dt>
+            <dd>Media, objects, screens, projection, web, sound</dd>
+
+            <dt>Photo credit</dt>
+            <dd>Photographer / artist / venue</dd>
+          </dl>
+        </aside>
+      </section>
+    </article>
+  </main>
+
+  <script>
+    const menu = document.getElementById("menu");
+    const menuToggle = document.getElementById("menu-toggle");
+
+    menuToggle.addEventListener("click", () => {
+      menu.classList.toggle("collapsed");
+    });
+  </script>
+</body>
+</html>
